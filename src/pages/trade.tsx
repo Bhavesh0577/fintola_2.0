@@ -6,6 +6,8 @@ import '../app/globals.css'
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/router";
 
 interface ChartUIProps {
   symbol: string;
@@ -61,9 +63,32 @@ function ChartUI({ symbol, title }: ChartUIProps) {
 
 // Create a proper page component that uses the ChartUI component
 export default function TradePage() {
+  const { user, isLoaded } = useUser();
+  const router = useRouter();
   const [searchInput, setSearchInput] = useState<string>("");
   const [selectedSymbol, setSelectedSymbol] = useState<string>("TATASTEEL.NS");
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Use useEffect to handle client-side authentication check
+  useEffect(() => {
+    setIsClient(true);
+    if (isLoaded && !user) {
+      router.push('/sign-in');
+    }
+  }, [isLoaded, user, router]);
+
+  // Don't render anything until we're on the client and auth is loaded
+  if (!isClient || !isLoaded) {
+    return <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <p>Loading...</p>
+    </div>;
+  }
+
+  // If no user is authenticated, don't render the page
+  if (!user) {
+    return null;
+  }
 
   const handleSearch = () => {
     if (searchInput.trim()) {

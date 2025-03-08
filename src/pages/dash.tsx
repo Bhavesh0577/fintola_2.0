@@ -3,14 +3,39 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ChartUI } from "@/components/chart-ui"
 import { VaultTable } from "@/components/vault-table"
-import { BarChart3, ChevronDown, Globe, Home, LayoutDashboard, LifeBuoy, Search, Settings, Wallet } from "lucide-react"
+import { BarChart3, ChevronDown, Globe, Home, LayoutDashboard, LifeBuoy, Search, Settings, Wallet, LogOut } from "lucide-react"
 import '../app/globals.css'
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useUser, UserButton, SignOutButton } from "@clerk/nextjs"
+import { useRouter } from "next/router"
 
 export default function Page() {
+  const { user, isLoaded } = useUser();
+  const router = useRouter();
   const [searchInput, setSearchInput] = useState<string>("");
   const [selectedSymbol, setSelectedSymbol] = useState<string>("BTC-USD");
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Use useEffect to handle client-side authentication check
+  useEffect(() => {
+    setIsClient(true);
+    if (isLoaded && !user) {
+      router.push('/sign-in');
+    }
+  }, [isLoaded, user, router]);
+
+  // Don't render anything until we're on the client and auth is loaded
+  if (!isClient || !isLoaded) {
+    return <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <p>Loading...</p>
+    </div>;
+  }
+
+  // If no user is authenticated, don't render the dashboard
+  if (!user) {
+    return null;
+  }
 
   const handleSearch = () => {
     if (searchInput.trim()) {
@@ -45,9 +70,22 @@ export default function Page() {
     <div className="min-h-screen bg-black text-white">
       <div className="grid lg:grid-cols-[280px_1fr]">
         <aside className="border-r bg-background/50 backdrop-blur">
-          <div className="flex h-16 items-center gap-2 border-b px-6">
-            <Wallet className="h-6 w-6" />
-            <span className="font-bold">Vaultify</span>
+          <div className="flex h-16 items-center justify-between border-b px-6">
+            <div className="flex items-center gap-2">
+              <Wallet className="h-6 w-6" />
+              <span className="font-bold">Vaultify</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs"
+                onClick={() => router.push('/profile')}
+              >
+                Profile
+              </Button>
+              <UserButton afterSignOutUrl="/" />
+            </div>
           </div>
           <div className="px-4 py-4">
             <div className="flex gap-2">
@@ -75,7 +113,7 @@ export default function Page() {
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <BarChart3 className="h-4 w-4" />
-              Statistics & Income
+              Analytics
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <Globe className="h-4 w-4" />
@@ -98,9 +136,25 @@ export default function Page() {
               <Settings className="h-4 w-4" />
               Settings
             </Button>
+            <div className="absolute bottom-4 left-0 right-0 px-2">
+              <SignOutButton>
+                <Button variant="ghost" className="w-full justify-start gap-2 text-red-500 hover:text-red-600 hover:bg-red-100/10">
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              </SignOutButton>
+            </div>
           </nav>
         </aside>
-        <main className="p-6">
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+          <div className="flex items-center">
+            <h1 className="font-semibold text-lg md:text-2xl">Dashboard</h1>
+            {user && (
+              <p className="ml-4 text-sm text-gray-400">
+                Welcome, {user.firstName || user.username || 'User'}!
+              </p>
+            )}
+          </div>
           <div className="mb-6 flex items-center justify-between">
             <div className="space-y-1">
               <h1 className="text-2xl font-bold">Overview</h1>

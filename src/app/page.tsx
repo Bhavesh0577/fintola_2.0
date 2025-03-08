@@ -129,7 +129,7 @@ export default function LandingPage() {
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <Link
-                href="/dash"
+                href="/sign-in"
                 className="bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-full text-lg font-medium transition-colors inline-flex items-center gap-2"
               >
                 Try Dashboard <ArrowRight className="h-5 w-5" />
