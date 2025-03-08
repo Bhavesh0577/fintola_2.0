@@ -1,7 +1,6 @@
 import { Button } from "@/components/custom-button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { MetricsCard } from "@/components/metrics-card"
 import { ChartUI } from "@/components/chart-ui"
 import { VaultTable } from "@/components/vault-table"
 import { BarChart3, ChevronDown, Globe, Home, LayoutDashboard, LifeBuoy, Search, Settings, Wallet } from "lucide-react"
@@ -67,7 +66,7 @@ export default function Page() {
                 <Search className="h-4 w-4" />
               </Button>
             </div>
-            
+
           </div>
           <nav className="space-y-2 px-2">
             <Button variant="ghost" className="w-full justify-start gap-2" onClick={() => window.location.href = '/trade'}>

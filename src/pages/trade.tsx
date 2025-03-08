@@ -50,7 +50,7 @@ function ChartUI({ symbol, title }: ChartUIProps) {
         <div className="mt-4 text-xs text-gray-500">
           <p>Chart data provided by Yahoo Finance. Traditional signals are generated using EMA crossover strategy.</p>
           <p className="mt-1">
-            <span className="text-purple-400 font-medium">Gemini AI Feature:</span> Click the "Use Gemini AI" button to enable AI-powered analysis and buy/sell signals using Google's Gemini Flash 1.5 model.
+            <span className="text-purple-400 font-medium">Gemini AI Feature:</span> Click the &quot;Use Gemini AI&quot; button to enable AI-powered analysis and buy/sell signals using Google&apos;s Gemini Flash 1.5 model.
           </p>
           <p className="mt-2">This is for informational purposes only and should not be considered financial advice.</p>
         </div>

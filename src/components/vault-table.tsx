@@ -1,7 +1,6 @@
 import { Avatar } from "@/components/ui/avatar"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { MoreHorizontal, Loader2 } from "lucide-react"
-import Image from 'next/image';
 import { useEffect, useState } from "react";
 
 // Define the type for market data

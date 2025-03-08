@@ -37,8 +37,8 @@ export default function TradingViewPage() {
                             type="text"
                             placeholder="Search symbol..."
                             value={searchInput}
-                            onChange={(e) => setSearchInput(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchInput(e.target.value)}
+                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleSearch()}
                             className="w-64 pl-8"
                         />
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
