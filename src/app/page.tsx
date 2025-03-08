@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, BarChart2, TrendingUp, DollarSign, PieChart, Search, Menu, X } from "lucide-react";
+import '../app/globals.css';
 
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);

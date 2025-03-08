@@ -13,6 +13,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Get the publishable key from the environment variable
+// This needs to be a constant at build time for proper deployment
+const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "";
+
+if (!publishableKey) {
+  console.error("Missing Clerk publishable key. Please set NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY environment variable.");
+}
+
 export const metadata: Metadata = {
   title: "Fintola - Financial Analytics",
   description: "Advanced financial analytics and trading platform",
@@ -25,6 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
+      publishableKey={publishableKey}
       appearance={{
         elements: {
           formButtonPrimary: 'bg-purple-600 hover:bg-purple-700',
