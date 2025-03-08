@@ -6,8 +6,9 @@ import '../app/globals.css';
 // This needs to be a constant at build time for proper deployment
 const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "";
 
-if (!publishableKey) {
-  console.error("Missing Clerk publishable key. Please set NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY environment variable.");
+// Log for debugging
+if (typeof window !== 'undefined') {
+  console.log("Clerk publishable key in _app.tsx:", publishableKey);
 }
 
 function MyApp({ Component, pageProps }: AppProps) {

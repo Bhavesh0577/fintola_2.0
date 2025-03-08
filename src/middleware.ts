@@ -1,6 +1,6 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-// Export the middleware function without any options
+// Export the middleware function
 export default clerkMiddleware();
 
 // Configure the middleware matcher
