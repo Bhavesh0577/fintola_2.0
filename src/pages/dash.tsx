@@ -91,7 +91,7 @@ export default function Page() {
             <div className="flex gap-2">
               <Input
                 placeholder="Search stock or crypto"
-                className="bg-background/50 text-black placeholder:text-gray-400 border-gray-700"
+                className="bg-gray-800/50 text-white placeholder:text-gray-500 border-gray-700 focus:border-purple-300 transition-colors"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -111,9 +111,9 @@ export default function Page() {
               <LayoutDashboard className="h-4 w-4" />
               Dashboard
             </Button>
-            <Button variant="ghost" className="w-full justify-start gap-2">
+            <Button variant="ghost" className="w-full justify-start gap-2" onClick={() => window.location.href = 'https://www.tradingview.com/chart/8daX0FdT/'}>
               <BarChart3 className="h-4 w-4" />
-              Analytics
+              Intraday Strategy
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <Globe className="h-4 w-4" />
