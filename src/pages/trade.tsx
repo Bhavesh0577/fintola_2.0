@@ -2,90 +2,62 @@
 
 import React, { useState, useEffect } from "react";
 import { StatsChart } from "../components/stats-chart";
-import '../app/globals.css'
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { Activity, TrendingUp, Search} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, TrendingUp, Activity, BarChart2 } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/router";
-
 interface ChartUIProps {
-  symbol: string;
-  title?: string;
+    symbol: string;
+    title?: string;
 }
 
-function ChartUI({ symbol, title }: ChartUIProps) {
-  const [currentDateTime, setCurrentDateTime] = useState<string>("");
+export function ChartUI({ symbol, title }: ChartUIProps) {
+    const [currentDateTime, setCurrentDateTime] = useState<string>("");
 
-  // Update the date on the client side only
-  useEffect(() => {
-    setCurrentDateTime(new Date().toLocaleString());
+    // Update the date on the client side only
+    useEffect(() => {
+        setCurrentDateTime(new Date().toLocaleString());
 
-    // Optional: Update the time every minute
-    const intervalId = setInterval(() => {
-      setCurrentDateTime(new Date().toLocaleString());
-    }, 60000);
+        // Optional: Update the time every minute
+        const intervalId = setInterval(() => {
+            setCurrentDateTime(new Date().toLocaleString());
+        }, 60000);
 
-    return () => clearInterval(intervalId);
-  }, []);
+        return () => clearInterval(intervalId);
+    }, []);
 
-  return (
-    <div className="w-full relative">
-      {title && (
-        <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-purple-500" />
-          {title}
-        </h3>
-      )}
+    return (
+        <div className="w-full">
+            {title && (
+                <h3 className="text-lg font-medium mb-4">{title}</h3>
+            )}
 
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-[1px] shadow-lg hover:shadow-purple-500/20 transition-shadow duration-300">
-        <div className="bg-gray-900 rounded-xl p-6">
-          <div className="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-purple-500/10 p-2 rounded-lg">
-                <Activity className="h-5 w-5 text-purple-500" />
-              </div>
-              <div>
-                <span className="text-sm text-gray-400">Symbol</span>
-                <h4 className="font-semibold text-lg">{symbol}</h4>
-              </div>
+            <div className="bg-gray-900 rounded-lg p-4">
+                <div className="flex justify-between items-center mb-4">
+                    <div>
+                        <span className="text-sm text-gray-400">Symbol:</span>
+                        <span className="ml-2 font-semibold">{symbol}</span>
+                    </div>
+
+                    <div className="text-sm text-gray-400">
+                        Last updated: {currentDateTime}
+                    </div>
+                </div>
+
+                <StatsChart symbol={symbol} />
+
+                <div className="mt-4 text-xs text-gray-500">
+                    <p>Chart data provided by Yahoo Finance. Traditional signals are generated using EMA crossover strategy.</p>
+                    <p className="mt-1">
+                        <span className="text-purple-400 font-medium">Gemini AI Feature:</span> Click the "Use Gemini AI" button to enable AI-powered analysis and buy/sell signals using Google's Gemini Flash 1.5 model.
+                    </p>
+                    <p className="mt-2">This is for informational purposes only and should not be considered financial advice.</p>
+                </div>
             </div>
-
-            <div className="flex items-center gap-2">
-              <BarChart2 className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-400">
-                Last updated: {currentDateTime}
-              </span>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-transparent opacity-30 rounded-lg" />
-            <StatsChart symbol={symbol} />
-          </div>
-
-          <div className="mt-6 space-y-2 border-t border-gray-800 pt-4">
-            <p className="text-sm text-gray-400">
-              Chart data provided by Yahoo Finance. Traditional signals are generated using EMA crossover strategy.
-            </p>
-            <div className="flex items-start gap-2 bg-purple-500/5 p-3 rounded-lg">
-              <div className="bg-purple-500/20 p-1.5 rounded-md mt-0.5">
-                <Activity className="h-4 w-4 text-purple-400" />
-              </div>
-              <p className="text-sm">
-                <span className="text-purple-400 font-medium">Gemini AI Feature:</span>{" "}
-                Click the &quot;Use Gemini AI&quot; button to enable AI-powered analysis and buy/sell signals using Google&apos;s Gemini Flash 1.5 model.
-              </p>
-            </div>
-            <p className="text-xs text-gray-500 italic">
-              This is for informational purposes only and should not be considered financial advice.
-            </p>
-          </div>
         </div>
-      </div>
-    </div>
-  );
-}
+    );
+} 
 
 // Create a proper page component that uses the ChartUI component
 export default function TradePage() {

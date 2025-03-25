@@ -14,7 +14,6 @@ export default async function handler(req, res) {
     const period1 = Math.floor(oneYearAgo / 1000); // Start date
     const period2 = Math.floor(now / 1000); // Current date
 
-    // Fetch live chart data for the requested symbol
     const chartData = await yahooFinance.chart(symbol, { period1, period2, interval: '1h' });
 
     res.status(200).json(chartData);
