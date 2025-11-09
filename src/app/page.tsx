@@ -69,9 +69,6 @@ export default function LandingPage() {
             <Link href="/" className="flex items-center space-x-2 group">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg blur-sm opacity-60 group-hover:opacity-80 transition" />
-                <div className="relative bg-gradient-to-br from-emerald-500 to-teal-600 p-2 rounded-lg">
-                  <TrendingUp className="w-5 h-5" />
-                </div>
               </div>
               <span className="text-xl font-semibold">Fintola</span>
             </Link>
