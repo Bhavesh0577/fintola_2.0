@@ -1,407 +1,326 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ContainerScroll } from "@/components/ui/container-scroll-animation";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, BarChart2, TrendingUp, DollarSign, PieChart, Search, Menu, X } from "lucide-react";
+import { ArrowRight, TrendingUp, LineChart, Sparkles, Shield, Zap, CheckCircle2, Menu, X, BarChart3, Activity } from "lucide-react";
 import '../app/globals.css';
 
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
-  // Handle scroll event to change navbar background
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const features = [
+    {
+      icon: <Sparkles className="w-6 h-6" />,
+      title: "AI-Powered Analysis",
+      description: "Get intelligent market predictions powered by Google's Gemini AI technology"
+    },
+    {
+      icon: <LineChart className="w-6 h-6" />,
+      title: "Real-Time Data",
+      description: "Live market updates with comprehensive charts and technical indicators"
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6" />,
+      title: "Smart Signals",
+      description: "Receive automated buy/sell signals and track your portfolio performance"
+    },
+    {
+      icon: <Shield className="w-6 h-6" />,
+      title: "Secure Trading",
+      description: "Your data protected with enterprise-level security standards"
+    },
+    {
+      icon: <Activity className="w-6 h-6" />,
+      title: "Fast Performance",
+      description: "Lightning-quick execution for time-sensitive trading opportunities"
+    },
+    {
+      icon: <BarChart3 className="w-6 h-6" />,
+      title: "Advanced Tools",
+      description: "Professional-grade analytics used by thousands of successful traders"
+    }
+  ];
+
+  const stats = [
+    { value: "45K+", label: "Active Users" },
+    { value: "₹2.3B+", label: "Volume Traded" },
+    { value: "99.8%", label: "Uptime" },
+    { value: "4.8", label: "Average Rating" }
+  ];
+
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Navbar */}
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-black/80 backdrop-blur-md py-3" : "bg-transparent py-5"
-          }`}
-      >
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <DollarSign className="h-8 w-8 text-purple-500" />
-            <span className="text-xl font-bold">Fintola</span>
-          </div>
+    <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black pointer-events-none" />
+      
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-slate-950/90 backdrop-blur-lg border-b border-slate-800/50" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/" className="flex items-center space-x-2 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg blur-sm opacity-60 group-hover:opacity-80 transition" />
+                <div className="relative bg-gradient-to-br from-emerald-500 to-teal-600 p-2 rounded-lg">
+                  <TrendingUp className="w-5 h-5" />
+                </div>
+              </div>
+              <span className="text-xl font-semibold">Fintola</span>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="#features" className="hover:text-purple-400 transition-colors">
-              Features
-            </Link>
-            <Link href="#about" className="hover:text-purple-400 transition-colors">
-              About
-            </Link>
-            <Link href="#testimonials" className="hover:text-purple-400 transition-colors">
-              Testimonials
-            </Link>
-            <Link
-              href="/dash"
-              className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full transition-colors flex items-center gap-2"
-            >
-              Dashboard <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+            <div className="hidden md:flex items-center space-x-8">
+              <Link href="#features" className="text-sm text-slate-400 hover:text-white transition">Features</Link>
+              <Link href="#about" className="text-sm text-slate-400 hover:text-white transition">About</Link>
+              <Link href="/dash" className="relative px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg text-sm font-medium hover:from-emerald-500 hover:to-teal-500 transition-all shadow-lg shadow-emerald-500/20">
+                Dashboard
+              </Link>
+            </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-white"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2">
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-black/95 backdrop-blur-md absolute top-full left-0 right-0 p-4 flex flex-col gap-4">
-            <Link
-              href="#features"
-              className="hover:text-purple-400 transition-colors py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Features
-            </Link>
-            <Link
-              href="#about"
-              className="hover:text-purple-400 transition-colors py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              About
-            </Link>
-            <Link
-              href="#testimonials"
-              className="hover:text-purple-400 transition-colors py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Testimonials
-            </Link>
-            <Link
-              href="/dash"
-              className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full transition-colors flex items-center justify-center gap-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Dashboard <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="md:hidden bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50">
+            <div className="px-4 py-6 space-y-3">
+              <Link href="#features" className="block text-slate-300 hover:text-white transition py-2" onClick={() => setMobileMenuOpen(false)}>Features</Link>
+              <Link href="#about" className="block text-slate-300 hover:text-white transition py-2" onClick={() => setMobileMenuOpen(false)}>About</Link>
+              <Link href="/dash" className="block w-full px-5 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg text-center font-medium mt-4" onClick={() => setMobileMenuOpen(false)}>
+                Dashboard
+              </Link>
+            </div>
+          </motion.div>
         )}
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.h1
-              className="text-4xl md:text-6xl font-bold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              Advanced Stock Analysis with <span className="text-purple-500">AI Predictions</span>
-            </motion.h1>
-            <motion.p
-              className="text-xl text-gray-300 mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              Get real-time market data, AI-powered insights, and advanced charting tools to make smarter investment decisions.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <Link
-                href="/sign-in"
-                className="bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-full text-lg font-medium transition-colors inline-flex items-center gap-2"
-              >
-                Try Dashboard <ArrowRight className="h-5 w-5" />
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section with Scroll Animation */}
-      <section id="features" className="py-20">
-        <ContainerScroll
-          titleComponent={
-            <h2 className="text-3xl md:text-5xl font-bold mb-10">
-              Powered by <span className="text-purple-500">Google Gemini AI</span> for Accurate Predictions
-            </h2>
-          }
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 h-full">
-            <div className="relative h-full w-full overflow-hidden rounded-2xl">
-              <Image
-                src="/stock-chart.jpg"
-                alt="Stock Chart"
-                fill
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
-                <h3 className="text-2xl font-bold mb-2">Real-time Market Data</h3>
-                <p className="text-gray-300">Access live stock prices, charts, and market indicators from global exchanges.</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              <div className="bg-purple-900/30 border border-purple-500/30 rounded-2xl p-6">
-                <TrendingUp className="h-10 w-10 text-purple-500 mb-4" />
-                <h3 className="text-xl font-bold mb-2">AI-Powered Predictions</h3>
-                <p className="text-gray-300">Get buy/sell signals generated by Google's Gemini Flash 1.5 AI model.</p>
-              </div>
-              <div className="bg-purple-900/30 border border-purple-500/30 rounded-2xl p-6">
-                <BarChart2 className="h-10 w-10 text-purple-500 mb-4" />
-                <h3 className="text-xl font-bold mb-2">Advanced Technical Analysis</h3>
-                <p className="text-gray-300">Apply multiple indicators like SMA, EMA, and more to your charts.</p>
-              </div>
-              <div className="bg-purple-900/30 border border-purple-500/30 rounded-2xl p-6">
-                <PieChart className="h-10 w-10 text-purple-500 mb-4" />
-                <h3 className="text-xl font-bold mb-2">Portfolio Management</h3>
-                <p className="text-gray-300">Track your investments and analyze performance over time.</p>
-              </div>
-            </div>
-          </div>
-        </ContainerScroll>
-      </section>
-
-      {/* About Section */}
-      <section id="about" className="py-20 bg-gradient-to-b from-black to-purple-950/20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">About Fintola</h2>
-              <p className="text-xl text-gray-300">Our mission is to democratize financial analysis with cutting-edge technology.</p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                <h3 className="text-2xl font-bold mb-4">Why Choose Fintola?</h3>
-                <ul className="space-y-4">
-                  <li className="flex items-start gap-3">
-                    <div className="bg-purple-500 rounded-full p-1 mt-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-medium">AI-Powered Analysis</h4>
-                      <p className="text-gray-400">Our platform leverages Google's Gemini AI to provide accurate market predictions.</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="bg-purple-500 rounded-full p-1 mt-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Real-time Data</h4>
-                      <p className="text-gray-400">Access up-to-the-minute information from global markets and exchanges.</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="bg-purple-500 rounded-full p-1 mt-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Focus on Indian Markets</h4>
-                      <p className="text-gray-400">Specialized tools and data for NSE, BSE, and Indian stocks.</p>
-                    </div>
-                  </li>
-                </ul>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-                className="relative h-[400px] rounded-2xl overflow-hidden"
-              >
-                <Image
-                  src="/trading-desk.jpg"
-                  alt="Trading Desk"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-purple-900/40"></div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
+      <section className="relative min-h-screen flex items-center justify-center pt-20 px-4">
+        <motion.div style={{ opacity, scale }} className="max-w-6xl mx-auto text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6 }} 
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-8"
           >
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">What Our Users Say</h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">Join thousands of traders who trust Fintola for their investment decisions.</p>
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-sm text-emerald-400">AI-Powered Trading Platform</span>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-gray-900 rounded-2xl p-6 border border-gray-800"
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.1 }} 
+            className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight"
+          >
+            Make Better
+            <br />
+            <span className="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">
+              Trading Decisions
+            </span>
+          </motion.h1>
+
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.2 }} 
+            className="text-lg md:text-xl text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed"
+          >
+            Professional stock analysis platform with AI insights, real-time data, and advanced charting tools. Everything you need to trade smarter.
+          </motion.p>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.3 }} 
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <Link href="/sign-in" className="group px-8 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg text-base font-medium hover:from-emerald-500 hover:to-teal-500 transition-all shadow-lg shadow-emerald-500/25">
+              <span className="flex items-center gap-2">
+                Get Started <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+              </span>
+            </Link>
+            <Link href="#features" className="px-8 py-3.5 rounded-lg text-base font-medium border border-slate-700 hover:border-slate-600 hover:bg-slate-900/50 transition-all">
+              Learn More
+            </Link>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            transition={{ duration: 0.6, delay: 0.5 }} 
+            className="mt-12 flex items-center justify-center gap-8 text-sm text-slate-500"
+          >
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <span>Free to use</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <span>No credit card needed</span>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-1/3 -left-40 w-80 h-80 bg-emerald-600/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 -right-40 w-80 h-80 bg-teal-600/20 rounded-full blur-3xl" />
+        </div>
+      </section>
+
+      <section className="relative py-16 px-4 border-t border-slate-800/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <motion.div 
+                key={index} 
+                initial={{ opacity: 0, y: 20 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.5, delay: index * 0.1 }} 
+                viewport={{ once: true }} 
+                className="text-center"
               >
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden">
-                    <Image
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">{testimonial.name}</h4>
-                    <p className="text-gray-400 text-sm">{testimonial.title}</p>
-                  </div>
+                <div className="text-3xl md:text-4xl font-bold text-emerald-400 mb-1">
+                  {stat.value}
                 </div>
-                <p className="text-gray-300">{testimonial.quote}</p>
-                <div className="flex mt-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
+                <div className="text-slate-500 text-sm">{stat.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-t from-black to-purple-950/20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.h2
-              className="text-3xl md:text-5xl font-bold mb-6"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              Ready to Transform Your Trading?
-            </motion.h2>
-            <motion.p
-              className="text-xl text-gray-300 mb-8"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-            >
-              Join Fintola today and experience the power of AI-driven stock analysis.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              viewport={{ once: true }}
-            >
-              <Link
-                href="/dash"
-                className="bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-full text-lg font-medium transition-colors inline-flex items-center gap-2"
+      <section id="features" className="relative py-24 px-4">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5 }} 
+            viewport={{ once: true }} 
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Built for Traders
+            </h2>
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+              All the tools you need in one place
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <motion.div 
+                key={index} 
+                initial={{ opacity: 0, y: 20 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.5, delay: index * 0.1 }} 
+                viewport={{ once: true }} 
+                className="group p-6 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-emerald-500/50 transition-all hover:bg-slate-900/80"
               >
-                Get Started <ArrowRight className="h-5 w-5" />
-              </Link>
-            </motion.div>
+                <div className="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-emerald-500/10 text-emerald-500 mb-4 group-hover:bg-emerald-500/20 transition">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-white">{feature.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{feature.description}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-10 border-t border-gray-800">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <DollarSign className="h-6 w-6 text-purple-500" />
-              <span className="text-lg font-bold">Fintola</span>
+      <section id="about" className="relative py-24 px-4 border-t border-slate-800/50">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5 }} 
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Why Choose Fintola?
+            </h2>
+            <p className="text-lg text-slate-400 mb-12 leading-relaxed">
+              We combine cutting-edge AI technology with real-time market data to give you an edge in trading. Whether you're just starting out or you're a seasoned trader, our platform adapts to your needs.
+            </p>
+            <div className="grid md:grid-cols-3 gap-8 mt-12">
+              <div className="p-6 rounded-xl bg-slate-900/30 border border-slate-800">
+                <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-6 h-6 text-emerald-500" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">AI Intelligence</h3>
+                <p className="text-slate-400 text-sm">Powered by Google Gemini for accurate predictions</p>
+              </div>
+              <div className="p-6 rounded-xl bg-slate-900/30 border border-slate-800">
+                <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                  <Zap className="w-6 h-6 text-emerald-500" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Real-Time Speed</h3>
+                <p className="text-slate-400 text-sm">Instant updates from global markets</p>
+              </div>
+              <div className="p-6 rounded-xl bg-slate-900/30 border border-slate-800">
+                <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                  <Shield className="w-6 h-6 text-emerald-500" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Secure Platform</h3>
+                <p className="text-slate-400 text-sm">Enterprise-grade data protection</p>
+              </div>
             </div>
-            <div className="flex gap-6">
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                Contact Us
-              </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="relative py-24 px-4 border-t border-slate-800/50">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5 }} 
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Ready to Start Trading?
+            </h2>
+            <p className="text-lg text-slate-400 mb-10">
+              Join thousands of traders who trust Fintola every day
+            </p>
+            <Link href="/sign-in" className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg text-base font-medium hover:from-emerald-500 hover:to-teal-500 transition-all shadow-lg shadow-emerald-500/25">
+              Get Started Now <ArrowRight className="w-4 h-4" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      <footer className="relative border-t border-slate-800/50 py-10 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-2">
+              <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-2 rounded-lg">
+                <TrendingUp className="w-5 h-5" />
+              </div>
+              <span className="text-lg font-semibold">Fintola</span>
             </div>
-          </div>
-          <div className="mt-6 text-center text-gray-500 text-sm">
-            © {new Date().getFullYear()} Fintola. All rights reserved.
+
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+              <Link href="#" className="hover:text-white transition">Privacy</Link>
+              <Link href="#" className="hover:text-white transition">Terms</Link>
+              <Link href="#" className="hover:text-white transition">Contact</Link>
+              <Link href="#" className="hover:text-white transition">Support</Link>
+            </div>
+
+            <div className="text-sm text-slate-500">
+              © 2025 Fintola
+            </div>
           </div>
         </div>
       </footer>
     </div>
   );
 }
-
-// Testimonial data
-const testimonials = [
-  {
-    name: "Rajesh Kumar",
-    title: "Day Trader",
-    avatar: "/avatar-1.jpg",
-    quote: "The AI predictions have completely transformed my trading strategy. I've seen a 32% increase in my portfolio since using Fintola."
-  },
-  {
-    name: "Priya Sharma",
-    title: "Investment Analyst",
-    avatar: "/avatar-2.jpg",
-    quote: "As a professional analyst, I appreciate the depth of technical indicators available. The Gemini AI integration is a game-changer."
-  },
-  {
-    name: "Vikram Singh",
-    title: "Retail Investor",
-    avatar: "/avatar-3.jpg",
-    quote: "Fintola makes stock analysis accessible even for beginners like me. The interface is intuitive and the AI recommendations are spot on."
-  }
-]; 
