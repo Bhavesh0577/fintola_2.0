@@ -5,7 +5,13 @@
         "NEXT_PUBLIC_CLERK_SIGN_IN_URL": "/sign-in",
         "NEXT_PUBLIC_CLERK_SIGN_UP_URL": "/sign-up",
         "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL": "/dash",
-        "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL": "/dash"
+        "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL": "/dash",
+        "GEMINI_API_KEY": ""
+    },
+    "functions": {
+        "api/*.py": {
+            "runtime": "python3.9"
+        }
     },
     "buildCommand": "next build",
     "installCommand": "npm install",
