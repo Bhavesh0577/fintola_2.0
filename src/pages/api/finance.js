@@ -1,12 +1,8 @@
 // filepath: /c:/Users/bhave/fintola/src/pages/api/finance.js
-// This proxies requests to the Python API (local or Vercel serverless)
+// This proxies requests to the Python API hosted on Render
 
-// Use environment variable for production, fallback to local for development
-const PYTHON_API_URL = process.env.PYTHON_API_URL || (
-  process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
-    : 'http://localhost:8001'
-);
+// Use environment variable for production, fallback to Render URL
+const PYTHON_API_URL = process.env.PYTHON_API_URL || 'https://ppio.onrender.com';
 
 // For Vercel deployment, we use the /api/finance.py Python serverless function
 const IS_VERCEL = process.env.VERCEL === '1';

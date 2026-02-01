@@ -1,10 +1,5 @@
-// Use Python API for fetching finance data
-// For Vercel, use the Python serverless function; for local, use FastAPI server
-const PYTHON_API_URL = process.env.PYTHON_API_URL || (
-    process.env.VERCEL_URL 
-        ? `https://${process.env.VERCEL_URL}` 
-        : 'http://localhost:8001'
-);
+// Use Python API for fetching finance data (hosted on Render)
+const PYTHON_API_URL = process.env.PYTHON_API_URL || 'https://ppio.onrender.com';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
