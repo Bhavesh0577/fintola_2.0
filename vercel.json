@@ -6,7 +6,13 @@
         "NEXT_PUBLIC_CLERK_SIGN_UP_URL": "/sign-up",
         "NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL": "/dash",
         "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL": "/dash",
-        "GEMINI_API_KEY": ""
+        "GEMINI_API_KEY": "",
+        "PYTHON_API_URL": "https://ppio.onrender.com"
+    },
+    "functions": {
+        "src/pages/api/**/*.js": {
+            "maxDuration": 60
+        }
     },
     "buildCommand": "next build",
     "installCommand": "npm install",

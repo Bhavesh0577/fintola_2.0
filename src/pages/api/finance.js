@@ -4,27 +4,32 @@
 // Use environment variable for production, fallback to Render URL
 const PYTHON_API_URL = process.env.PYTHON_API_URL || 'https://ppio.onrender.com';
 
-// For Vercel deployment, we use the /api/finance.py Python serverless function
-const IS_VERCEL = process.env.VERCEL === '1';
+async function fetchWithTimeout(url, timeoutMs = 30000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    return response;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 export default async function handler(req, res) {
   try {
     // Get the symbol and type from the query parameters
     const { symbol = 'RELIANCE.NS', type = 'chart', period = '1mo', interval = '1d' } = req.query;
 
-    let apiUrl;
-    if (IS_VERCEL) {
-      // On Vercel, call the Python serverless function directly
-      // The Python function is at /api/finance (finance.py)
-      apiUrl = `${PYTHON_API_URL}/api/finance?symbol=${encodeURIComponent(symbol)}&type=${type}&period=${period}&interval=${interval}`;
-    } else {
-      // Local development - call the Python FastAPI server
-      apiUrl = `${PYTHON_API_URL}/api/finance?symbol=${encodeURIComponent(symbol)}&type=${type}&period=${period}&interval=${interval}`;
-    }
+    const apiUrl = `${PYTHON_API_URL}/api/finance?symbol=${encodeURIComponent(symbol)}&type=${type}&period=${period}&interval=${interval}`;
     
-    const response = await fetch(apiUrl);
+    console.log(`Fetching from Python API: ${apiUrl}`);
+    
+    // Use 30s timeout to handle Render cold starts
+    const response = await fetchWithTimeout(apiUrl, 30000);
     
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Python API error: ${response.status} - ${errorText}`);
       throw new Error(`Python API returned ${response.status}`);
     }
     

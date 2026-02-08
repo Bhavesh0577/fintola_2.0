@@ -3,15 +3,29 @@ const PYTHON_API_URL = process.env.PYTHON_API_URL || 'https://ppio.onrender.com'
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
+async function fetchWithTimeout(url, timeoutMs = 30000) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        const response = await fetch(url, { signal: controller.signal });
+        return response;
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
 export default async function handler(req, res) {
     try {
         const { symbol = 'TATASTEEL.NS' } = req.query;
 
         // Fetch historical data from Python API (works on both Vercel and local)
         const pythonApiUrl = `${PYTHON_API_URL}/api/finance?symbol=${encodeURIComponent(symbol)}&type=chart`;
-        const response = await fetch(pythonApiUrl);
+        console.log(`AI Prediction: Fetching from Python API: ${pythonApiUrl}`);
+        const response = await fetchWithTimeout(pythonApiUrl, 30000);
         
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Python API error: ${response.status} - ${errorText}`);
             throw new Error(`Python API returned ${response.status}`);
         }
         
