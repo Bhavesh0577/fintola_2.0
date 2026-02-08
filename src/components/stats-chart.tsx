@@ -181,17 +181,20 @@ export function StatsChart({ symbol = "TATASTEEL.NS" }: StatsChartProps) {
     // Initial data fetch
     fetchSymbolData(symbol);
 
-    // Handle responsive resizing
-    const handleResize = () => {
-      if (chartContainerRef.current) {
-        chart.applyOptions({ width: chartContainerRef.current.offsetWidth });
+    // Handle responsive resizing using ResizeObserver
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const width = entry.contentRect.width;
+        if (width > 0) {
+          chart.applyOptions({ width });
+        }
       }
-    };
-    window.addEventListener("resize", handleResize);
+    });
+    resizeObserver.observe(chartContainerRef.current);
 
     // Cleanup on component unmount
     return () => {
-      window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
       chartRef.current?.remove();
     };
   }, []);
@@ -253,111 +256,164 @@ export function StatsChart({ symbol = "TATASTEEL.NS" }: StatsChartProps) {
   }, [chartData, showSMA, showEMA]);
 
   return (
-    <div>
-      <div className="flex justify-center items-center gap-4 mb-4">
+    <div className="space-y-4">
+      {/* Indicator Toggle Bar */}
+      <div className="flex flex-wrap items-center gap-2">
         <button
           onClick={() => setShowSMA((prev) => !prev)}
-          className="px-3 py-1 bg-gray-700 rounded text-white hover:bg-gray-600"
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ring-1 ring-inset ${
+            showSMA
+              ? "bg-amber-500/10 text-amber-400 ring-amber-500/25"
+              : "bg-white/[0.03] text-zinc-500 ring-white/[0.06] hover:bg-white/[0.06] hover:text-zinc-300"
+          }`}
         >
-          {showSMA ? "Hide SMA" : "Show SMA"}
+          <span className={`h-1.5 w-1.5 rounded-full ${showSMA ? "bg-amber-400" : "bg-zinc-600"}`} />
+          SMA
         </button>
         <button
           onClick={() => setShowEMA((prev) => !prev)}
-          className="px-3 py-1 bg-gray-700 rounded text-white hover:bg-gray-600"
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ring-1 ring-inset ${
+            showEMA
+              ? "bg-indigo-500/10 text-indigo-400 ring-indigo-500/25"
+              : "bg-white/[0.03] text-zinc-500 ring-white/[0.06] hover:bg-white/[0.06] hover:text-zinc-300"
+          }`}
         >
-          {showEMA ? "Hide EMA" : "Show EMA"}
+          <span className={`h-1.5 w-1.5 rounded-full ${showEMA ? "bg-indigo-400" : "bg-zinc-600"}`} />
+          EMA
         </button>
+
+        <div className="h-4 w-px bg-white/[0.06] mx-1 hidden sm:block" />
+
         <button
           onClick={() => setUseAI((prev) => !prev)}
-          className={`px-3 py-1 rounded text-white ${useAI
-            ? "bg-purple-600 hover:bg-purple-700"
-            : "bg-gray-700 hover:bg-gray-600"
-            }`}
           disabled={aiLoading}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ring-1 ring-inset ${
+            useAI
+              ? "bg-violet-500/15 text-violet-300 ring-violet-500/30 shadow-sm shadow-violet-500/10"
+              : "bg-white/[0.03] text-zinc-500 ring-white/[0.06] hover:bg-white/[0.06] hover:text-zinc-300"
+          }`}
         >
           {aiLoading ? (
-            <span className="flex items-center">
-              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Loading Gemini AI...
-            </span>
+            <>
+              <div className="h-3 w-3 animate-spin rounded-full border border-transparent border-t-violet-400" />
+              <span>Analyzing…</span>
+            </>
           ) : (
-            useAI ? "Using Gemini AI" : "Use Gemini AI"
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
+                <path d="M8 0L9.55 5.15L15 6L10.5 9.85L11.8 15.3L8 12L4.2 15.3L5.5 9.85L1 6L6.45 5.15L8 0Z" />
+              </svg>
+              <span>{useAI ? "Gemini AI Active" : "Gemini AI"}</span>
+            </>
           )}
         </button>
       </div>
 
+      {/* Loading State */}
       {loading && (
-        <div className="flex justify-center items-center h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <div className="flex flex-col justify-center items-center h-[420px] gap-3">
+          <div className="relative h-8 w-8">
+            <div className="absolute inset-0 rounded-full border-2 border-zinc-800" />
+            <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-indigo-500" />
+          </div>
+          <span className="text-xs text-zinc-600">Loading chart data…</span>
         </div>
       )}
 
+      {/* Error State */}
       {error && (
-        <div className="flex justify-center items-center h-[400px] text-red-500">
-          <p>{error}</p>
+        <div className="flex flex-col justify-center items-center h-[420px] gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 ring-1 ring-rose-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 text-rose-400">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <p className="text-sm text-rose-400">{error}</p>
         </div>
       )}
 
+      {/* Chart Canvas */}
       <div
         ref={chartContainerRef}
+        className="rounded-lg overflow-hidden"
         style={{
           position: "relative",
-          display: loading || error ? "none" : "block"
+          display: loading || error ? "none" : "block",
         }}
       />
 
+      {/* AI Analysis Panel */}
       {useAI && aiAnalysis && (
-        <div className="mt-4 p-4 bg-purple-900/30 border border-purple-500/30 rounded-md">
-          <h4 className="text-sm font-semibold text-purple-300 mb-2">Gemini AI Analysis for {aiAnalysis.symbol}</h4>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h5 className="text-xs font-medium text-purple-200 mb-1">Market Summary</h5>
-              <p className="text-xs text-gray-300">{aiAnalysis.analysis.summary}</p>
-
-              <div className="mt-3">
-                <h5 className="text-xs font-medium text-purple-200 mb-1">AI Prediction</h5>
-                <p className="text-xs text-gray-300">{aiAnalysis.analysis.prediction}</p>
+        <div className="rounded-xl border border-violet-500/15 bg-violet-500/[0.04] backdrop-blur-sm overflow-hidden">
+          {/* Panel Header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-violet-500/10">
+            <div className="flex items-center gap-2">
+              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-violet-500/15">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 text-violet-400">
+                  <path d="M8 0L9.55 5.15L15 6L10.5 9.85L11.8 15.3L8 12L4.2 15.3L5.5 9.85L1 6L6.45 5.15L8 0Z" />
+                </svg>
               </div>
+              <span className="text-[13px] font-semibold text-violet-300">Gemini AI · {aiAnalysis.symbol}</span>
             </div>
-
-            <div>
-              <h5 className="text-xs font-medium text-purple-200 mb-1">Technical Indicators</h5>
-              <div className="grid grid-cols-2 gap-2 text-xs text-gray-300">
-                <div>
-                  <span className="text-gray-400">SMA (5):</span> {aiAnalysis.analysis.technicalIndicators.sma5.toFixed(2)}
-                </div>
-                <div>
-                  <span className="text-gray-400">SMA (20):</span> {aiAnalysis.analysis.technicalIndicators.sma20.toFixed(2)}
-                </div>
-                <div>
-                  <span className="text-gray-400">Trend:</span>
-                  <span className={aiAnalysis.analysis.technicalIndicators.trend === "Bullish" ? "text-green-400" : "text-red-400"}>
-                    {aiAnalysis.analysis.technicalIndicators.trend}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-gray-400">Momentum:</span>
-                  <span className={aiAnalysis.analysis.technicalIndicators.momentum === "Positive" ? "text-green-400" : "text-red-400"}>
-                    {aiAnalysis.analysis.technicalIndicators.momentum}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-3 flex items-center">
-                <span className="inline-block w-3 h-3 bg-[#00BFFF] rounded-full mr-1"></span>
-                <span className="text-xs text-gray-300 mr-3">Blue arrows: AI buy signals</span>
-                <span className="inline-block w-3 h-3 bg-[#FF1493] rounded-full mr-1"></span>
-                <span className="text-xs text-gray-300">Pink arrows: AI sell signals</span>
-              </div>
-            </div>
+            <span className="text-[10px] text-zinc-600 font-medium">Google Gemini Flash 1.5</span>
           </div>
 
-          <div className="mt-3 text-xs text-gray-400 italic">
-            Powered by Google Gemini Flash 1.5 AI model
+          {/* Panel Body */}
+          <div className="p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Left: Summary + Prediction */}
+              <div className="space-y-4">
+                <div>
+                  <h5 className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500 mb-1.5">Market Summary</h5>
+                  <p className="text-[13px] leading-relaxed text-zinc-400">{aiAnalysis.analysis.summary}</p>
+                </div>
+                <div>
+                  <h5 className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500 mb-1.5">AI Prediction</h5>
+                  <p className="text-[13px] leading-relaxed text-zinc-400">{aiAnalysis.analysis.prediction}</p>
+                </div>
+              </div>
+
+              {/* Right: Technical Indicators */}
+              <div className="space-y-4">
+                <div>
+                  <h5 className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500 mb-2">Technical Indicators</h5>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="rounded-lg bg-white/[0.03] ring-1 ring-white/[0.04] px-3 py-2">
+                      <span className="text-[10px] text-zinc-600 block">SMA (5)</span>
+                      <span className="text-sm font-semibold text-zinc-300">{aiAnalysis.analysis.technicalIndicators.sma5.toFixed(2)}</span>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.03] ring-1 ring-white/[0.04] px-3 py-2">
+                      <span className="text-[10px] text-zinc-600 block">SMA (20)</span>
+                      <span className="text-sm font-semibold text-zinc-300">{aiAnalysis.analysis.technicalIndicators.sma20.toFixed(2)}</span>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.03] ring-1 ring-white/[0.04] px-3 py-2">
+                      <span className="text-[10px] text-zinc-600 block">Trend</span>
+                      <span className={`text-sm font-semibold ${aiAnalysis.analysis.technicalIndicators.trend === "Bullish" ? "text-emerald-400" : "text-rose-400"}`}>
+                        {aiAnalysis.analysis.technicalIndicators.trend}
+                      </span>
+                    </div>
+                    <div className="rounded-lg bg-white/[0.03] ring-1 ring-white/[0.04] px-3 py-2">
+                      <span className="text-[10px] text-zinc-600 block">Momentum</span>
+                      <span className={`text-sm font-semibold ${aiAnalysis.analysis.technicalIndicators.momentum === "Positive" ? "text-emerald-400" : "text-rose-400"}`}>
+                        {aiAnalysis.analysis.technicalIndicators.momentum}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Signal Legend */}
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#00BFFF]"></span>
+                    <span className="text-[11px] text-zinc-500">AI Buy</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-[#FF1493]"></span>
+                    <span className="text-[11px] text-zinc-500">AI Sell</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

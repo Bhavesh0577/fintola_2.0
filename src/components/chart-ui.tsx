@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { StatsChart } from "./stats-chart";
+import { Sparkles } from "lucide-react";
 
 interface ChartUIProps {
     symbol: string;
@@ -11,45 +12,35 @@ interface ChartUIProps {
 export function ChartUI({ symbol, title }: ChartUIProps) {
     const [currentDateTime, setCurrentDateTime] = useState<string>("");
 
-    // Update the date on the client side only
     useEffect(() => {
-        setCurrentDateTime(new Date().toLocaleString());
-
-        // Optional: Update the time every minute
-        const intervalId = setInterval(() => {
-            setCurrentDateTime(new Date().toLocaleString());
-        }, 60000);
-
-        return () => clearInterval(intervalId);
+        const update = () =>
+            setCurrentDateTime(
+                new Date().toLocaleTimeString("en-IN", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: true,
+                    timeZone: "Asia/Kolkata",
+                })
+            );
+        update();
+        const id = setInterval(update, 1000);
+        return () => clearInterval(id);
     }, []);
 
     return (
         <div className="w-full">
-            {title && (
-                <h3 className="text-lg font-medium mb-4">{title}</h3>
-            )}
+            <StatsChart symbol={symbol} />
 
-            <div className="bg-gray-900 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-4">
-                    <div>
-                        <span className="text-sm text-gray-400">Symbol:</span>
-                        <span className="ml-2 font-semibold">{symbol}</span>
-                    </div>
-
-                    <div className="text-sm text-gray-400">
-                        Last updated: {currentDateTime}
-                    </div>
-                </div>
-
-                <StatsChart symbol={symbol} />
-
-                <div className="mt-4 text-xs text-gray-500">
-                    <p>Chart data provided by Yahoo Finance. Traditional signals are generated using EMA crossover strategy.</p>
-                    <p className="mt-1">
-                        <span className="text-purple-400 font-medium">Gemini AI Feature:</span> Click the "Use Gemini AI" button to enable AI-powered analysis and buy/sell signals using Google's Gemini Flash 1.5 model.
+            {/* Footer */}
+            <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-3 border-t border-white/[0.04]">
+                <div className="flex items-center gap-2">
+                    <Sparkles className="h-3 w-3 text-indigo-400/60" />
+                    <p className="text-[11px] text-zinc-600">
+                        Enable <span className="text-indigo-400/80 font-medium">Gemini AI</span> for intelligent buy/sell signals
                     </p>
-                    <p className="mt-2">This is for informational purposes only and should not be considered financial advice.</p>
                 </div>
+                <p className="text-[10px] text-zinc-700">Last sync: {currentDateTime} IST · Not financial advice</p>
             </div>
         </div>
     );

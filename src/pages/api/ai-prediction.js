@@ -1,7 +1,7 @@
 // Use Python API for fetching finance data (hosted on Render)
 const PYTHON_API_URL = process.env.PYTHON_API_URL || 'https://ppio.onrender.com';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
 async function fetchWithTimeout(url, timeoutMs = 30000) {
     const controller = new AbortController();

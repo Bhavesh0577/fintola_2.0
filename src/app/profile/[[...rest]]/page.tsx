@@ -31,6 +31,7 @@ export default function ProfilePage() {
                 <h1 className="mb-8 text-center text-3xl font-bold">Your Profile</h1>
                 <div className="rounded-lg bg-white p-8 shadow-md">
                     <UserProfile
+                        path="/profile"
                         appearance={{
                             elements: {
                                 rootBox: "mx-auto",

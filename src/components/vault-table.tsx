@@ -1,6 +1,5 @@
-import { Avatar } from "@/components/ui/avatar"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { MoreHorizontal, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useEffect, useState } from "react";
 
 // Define the type for market data
@@ -172,84 +171,83 @@ export function VaultTable() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2">Loading market data...</span>
+      <div className="flex flex-col justify-center items-center h-48 gap-3">
+        <Loader2 className="h-6 w-6 animate-spin text-indigo-400" />
+        <span className="text-sm text-zinc-500">Fetching live market data…</span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-64 text-red-500">
-        <p>{error}</p>
+      <div className="flex justify-center items-center h-48">
+        <p className="text-sm text-rose-400">{error}</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Indian Market Data</h2>
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Stock</TableHead>
-            <TableHead>Daily Change</TableHead>
-            <TableHead>Market Cap</TableHead>
-            <TableHead>P/E Ratio</TableHead>
-            <TableHead>Sector</TableHead>
-            <TableHead>Last Updated</TableHead>
-            <TableHead>Volatility</TableHead>
-            <TableHead></TableHead>
+          <TableRow className="border-white/[0.04] hover:bg-transparent">
+            <TableHead className="text-[11px] uppercase tracking-wider text-zinc-600 font-semibold">Stock</TableHead>
+            <TableHead className="text-[11px] uppercase tracking-wider text-zinc-600 font-semibold">Daily Change</TableHead>
+            <TableHead className="text-[11px] uppercase tracking-wider text-zinc-600 font-semibold">Market Cap</TableHead>
+            <TableHead className="text-[11px] uppercase tracking-wider text-zinc-600 font-semibold">P/E Ratio</TableHead>
+            <TableHead className="text-[11px] uppercase tracking-wider text-zinc-600 font-semibold">Sector</TableHead>
+            <TableHead className="text-[11px] uppercase tracking-wider text-zinc-600 font-semibold">Last Updated</TableHead>
+            <TableHead className="text-[11px] uppercase tracking-wider text-zinc-600 font-semibold">Volatility</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {marketData.map((stock) => (
-            <TableRow key={stock.symbol}>
+            <TableRow key={stock.symbol} className="border-white/[0.03] hover:bg-white/[0.02] transition-colors cursor-pointer">
               <TableCell className="font-medium">
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-6 w-6">
-                    <div className="flex items-center justify-center w-full h-full bg-primary-foreground text-primary font-bold text-xs">
-                      {stock.symbol.substring(0, 1)}
-                    </div>
-                  </Avatar>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.04] ring-1 ring-white/[0.06] text-xs font-bold text-zinc-400">
+                    {stock.symbol.substring(0, 2)}
+                  </div>
                   <div>
-                    <div className="font-medium">{stock.name}</div>
-                    <div className="text-xs text-muted-foreground">{stock.price}</div>
+                    <div className="text-sm font-medium text-zinc-200">{stock.name}</div>
+                    <div className="text-xs text-zinc-500 mt-0.5">{stock.price}</div>
                   </div>
                 </div>
               </TableCell>
-              <TableCell className={stock.daily.includes('+') ? "text-green-500" : "text-red-500"}>{stock.daily}</TableCell>
-              <TableCell>{stock.marketCap}</TableCell>
-              <TableCell>{stock.peRatio}</TableCell>
+              <TableCell>
+                <span className={`text-sm font-semibold ${stock.daily.includes('+') ? "text-emerald-400" : "text-rose-400"}`}>
+                  {stock.daily}
+                </span>
+              </TableCell>
+              <TableCell className="text-sm text-zinc-400">{stock.marketCap}</TableCell>
+              <TableCell className="text-sm text-zinc-400">{stock.peRatio}</TableCell>
               <TableCell>
                 <span
-                  className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${stock.sector === "Banking" ? "bg-blue-500/10 text-blue-500" :
-                    stock.sector === "IT" ? "bg-purple-500/10 text-purple-500" :
-                      stock.sector === "Energy" ? "bg-yellow-500/10 text-yellow-500" :
-                        stock.sector === "Index" ? "bg-green-500/10 text-green-500" :
-                          "bg-red-500/10 text-red-500"
-                    }`}
+                  className={`inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${
+                    stock.sector === "Banking" ? "bg-blue-500/10 text-blue-400 ring-blue-500/20" :
+                    stock.sector === "IT" ? "bg-violet-500/10 text-violet-400 ring-violet-500/20" :
+                    stock.sector === "Energy" ? "bg-amber-500/10 text-amber-400 ring-amber-500/20" :
+                    stock.sector === "Index" ? "bg-emerald-500/10 text-emerald-400 ring-emerald-500/20" :
+                    "bg-rose-500/10 text-rose-400 ring-rose-500/20"
+                  }`}
                 >
                   {stock.sector}
                 </span>
               </TableCell>
-              <TableCell>{stock.lastUpdated}</TableCell>
+              <TableCell className="text-xs text-zinc-500">{stock.lastUpdated}</TableCell>
               <TableCell>
                 <div className="flex gap-1">
                   {Array.from({ length: 3 }).map((_, i) => (
                     <div
                       key={i}
-                      className={`h-1.5 w-3 rounded-full ${i < (stock.volatility === "high" ? 3 : stock.volatility === "medium" ? 2 : 1)
-                        ? "bg-primary"
-                        : "bg-muted"
-                        }`}
+                      className={`h-1.5 w-3 rounded-full ${
+                        i < (stock.volatility === "high" ? 3 : stock.volatility === "medium" ? 2 : 1)
+                          ? stock.volatility === "high" ? "bg-rose-400" : stock.volatility === "medium" ? "bg-amber-400" : "bg-emerald-400"
+                          : "bg-white/[0.06]"
+                      }`}
                     />
                   ))}
                 </div>
-              </TableCell>
-              <TableCell>
-                <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
               </TableCell>
             </TableRow>
           ))}

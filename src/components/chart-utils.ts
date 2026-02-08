@@ -114,37 +114,62 @@ export const processChartData = (data: any): CandlestickData[] => {
 // Chart configuration options
 export const getChartOptions = (width: number) => ({
     width: width,
-    height: 400,
+    height: 420,
     layout: {
-        background: { color: "#1e1e1e" },
-        textColor: "#d1d1d1",
+        background: { color: "transparent" },
+        textColor: "#71717a",
+        fontFamily: "'Inter', system-ui, sans-serif",
+        fontSize: 11,
     },
     grid: {
-        vertLines: { color: "#333333" },
-        horzLines: { color: "#333333" },
+        vertLines: { color: "rgba(255, 255, 255, 0.03)" },
+        horzLines: { color: "rgba(255, 255, 255, 0.03)" },
     },
-    crosshair: { mode: 1 },
-    rightPriceScale: { borderColor: "#333333" },
-    timeScale: { borderColor: "#333333" },
+    crosshair: {
+        mode: 1,
+        vertLine: {
+            color: "rgba(99, 102, 241, 0.3)",
+            width: 1 as any,
+            style: 2,
+            labelBackgroundColor: "#18181b",
+        },
+        horzLine: {
+            color: "rgba(99, 102, 241, 0.3)",
+            width: 1 as any,
+            style: 2,
+            labelBackgroundColor: "#18181b",
+        },
+    },
+    rightPriceScale: {
+        borderColor: "rgba(255, 255, 255, 0.04)",
+        scaleMargins: { top: 0.1, bottom: 0.1 },
+    },
+    timeScale: {
+        borderColor: "rgba(255, 255, 255, 0.04)",
+        timeVisible: true,
+        secondsVisible: false,
+    },
 });
 
 // Candlestick series options
 export const getCandlestickOptions = () => ({
-    upColor: "#00ff00",
-    downColor: "#ff0000",
+    upColor: "#34d399",
+    downColor: "#f87171",
     borderVisible: false,
-    wickUpColor: "#00ff00",
-    wickDownColor: "#ff0000",
+    wickUpColor: "#34d399",
+    wickDownColor: "#f87171",
+    borderUpColor: "#34d399",
+    borderDownColor: "#f87171",
 });
 
 // SMA series options
 export const getSMAOptions = () => ({
-    color: "#ffa500", // Orange for SMA
+    color: "#f59e0b",
     lineWidth: 2,
 });
 
 // EMA series options
 export const getEMAOptions = () => ({
-    color: "#00aaff", // Blue for EMA
+    color: "#818cf8",
     lineWidth: 2,
 }); 
