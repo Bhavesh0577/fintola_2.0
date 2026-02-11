@@ -60,7 +60,7 @@ const SECTOR_INDICES = [
   { key: "NIFTY REALTY", label: "Realty", icon: Activity },
 ]
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001"
+// Calls the Next.js proxy route which forwards to the Python API on Render
 
 /* ─── Color Helpers ───────────────────────────────────────────── */
 function getHeatColor(change: number): string {
@@ -290,7 +290,7 @@ export function SectorHeatmap() {
     if (showLoader) setLoading(true)
     setError(null)
     try {
-      const res = await fetch(`${API_BASE}/api/nse-heatmap?index=${encodeURIComponent(selectedIndex)}`)
+      const res = await fetch(`/api/nse-heatmap?index=${encodeURIComponent(selectedIndex)}`)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
       if (json.error) throw new Error(json.error)
