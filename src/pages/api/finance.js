@@ -18,9 +18,11 @@ async function fetchWithTimeout(url, timeoutMs = 30000) {
 export default async function handler(req, res) {
   try {
     // Get the symbol and type from the query parameters
-    const { symbol = 'RELIANCE.NS', type = 'chart', period = '1mo', interval = '1d' } = req.query;
+    const { symbol = 'RELIANCE.NS', type = 'chart', period = '1mo', interval = '1d', start, end } = req.query;
 
-    const apiUrl = `${PYTHON_API_URL}/api/finance?symbol=${encodeURIComponent(symbol)}&type=${type}&period=${period}&interval=${interval}`;
+    let apiUrl = `${PYTHON_API_URL}/api/finance?symbol=${encodeURIComponent(symbol)}&type=${type}&period=${period}&interval=${interval}`;
+    if (start) apiUrl += `&start=${encodeURIComponent(start)}`;
+    if (end) apiUrl += `&end=${encodeURIComponent(end)}`;
     
     console.log(`Fetching from Python API: ${apiUrl}`);
     

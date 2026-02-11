@@ -33,7 +33,7 @@ export function ChartUI({ symbol, title }: ChartUIProps) {
             <StatsChart symbol={symbol} />
 
             {/* Footer */}
-            <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-3 border-t border-white/[0.04]">
+            <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-3 border-t border-zinc-200 dark:border-white/[0.04]">
                 <div className="flex items-center gap-2">
                     <Sparkles className="h-3 w-3 text-indigo-400/60" />
                     <p className="text-[11px] text-zinc-600">

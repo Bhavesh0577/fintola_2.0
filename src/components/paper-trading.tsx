@@ -201,13 +201,13 @@ export function PaperTrading({
 
       {/* ── Virtual Account Stats ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Card className="border-white/[0.06] bg-white/[0.02]">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardContent className="p-3">
             <p className="text-[9px] uppercase tracking-widest text-zinc-600 font-medium mb-1">Cash Balance</p>
-            <p className="text-sm font-bold text-white">₹{stats.cashBalance.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</p>
+            <p className="text-sm font-bold text-zinc-900 dark:text-white">₹{stats.cashBalance.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</p>
           </CardContent>
         </Card>
-        <Card className="border-white/[0.06] bg-white/[0.02]">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardContent className="p-3">
             <p className="text-[9px] uppercase tracking-widest text-zinc-600 font-medium mb-1">Realized P&L</p>
             <p className={`text-sm font-bold ${stats.realizedPnl >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
@@ -215,13 +215,13 @@ export function PaperTrading({
             </p>
           </CardContent>
         </Card>
-        <Card className="border-white/[0.06] bg-white/[0.02]">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardContent className="p-3">
             <p className="text-[9px] uppercase tracking-widest text-zinc-600 font-medium mb-1">Total Trades</p>
-            <p className="text-sm font-bold text-white">{stats.tradeCount}</p>
+            <p className="text-sm font-bold text-zinc-900 dark:text-white">{stats.tradeCount}</p>
           </CardContent>
         </Card>
-        <Card className="border-white/[0.06] bg-white/[0.02]">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardContent className="p-3">
             <p className="text-[9px] uppercase tracking-widest text-zinc-600 font-medium mb-1">Starting Capital</p>
             <p className="text-sm font-bold text-zinc-400">₹10,00,000</p>
@@ -230,22 +230,22 @@ export function PaperTrading({
       </div>
 
       {/* ── Trade History ── */}
-      <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-xl overflow-hidden">
+      <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] backdrop-blur-xl overflow-hidden">
         <CardHeader className="px-5 pt-4 pb-3">
-          <CardTitle className="text-sm font-semibold text-zinc-300 flex items-center gap-2">
+          <CardTitle className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
             <History className="h-4 w-4 text-indigo-400" />
             Trade History
-            <Badge variant="outline" className="border-white/[0.06] text-zinc-500 text-[10px] ml-1">
+            <Badge variant="outline" className="border-zinc-200 dark:border-white/[0.06] text-zinc-500 text-[10px] ml-1">
               {trades.length}
             </Badge>
           </CardTitle>
         </CardHeader>
-        <Separator className="bg-white/[0.04]" />
+        <Separator className="bg-zinc-100 dark:bg-white/[0.04]" />
 
         {loading ? (
           <CardContent className="p-5 space-y-3">
             {[...Array(3)].map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full rounded-lg bg-white/[0.04]" />
+              <Skeleton key={i} className="h-12 w-full rounded-lg bg-zinc-100 dark:bg-white/[0.04]" />
             ))}
           </CardContent>
         ) : trades.length === 0 ? (
@@ -259,7 +259,7 @@ export function PaperTrading({
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-white/[0.04]">
+                  <tr className="border-b border-zinc-100 dark:border-white/[0.04]">
                     <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Time</th>
                     <th className="px-3 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Symbol</th>
                     <th className="px-3 py-3 text-center text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Side</th>
@@ -270,7 +270,7 @@ export function PaperTrading({
                 </thead>
                 <tbody>
                   {trades.map((t) => (
-                    <tr key={t.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                    <tr key={t.id} className="border-b border-zinc-100 dark:border-white/[0.03] hover:bg-zinc-100 dark:hover:bg-white/[0.02] transition-colors">
                       <td className="px-5 py-3 text-xs text-zinc-500">
                         {new Date(t.created_at).toLocaleString("en-IN", {
                           day: "2-digit",
@@ -280,7 +280,7 @@ export function PaperTrading({
                           hour12: true,
                         })}
                       </td>
-                      <td className="px-3 py-3 text-sm font-semibold text-zinc-300">{t.symbol}</td>
+                      <td className="px-3 py-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">{t.symbol}</td>
                       <td className="px-3 py-3 text-center">
                         <Badge
                           variant="outline"
@@ -295,7 +295,7 @@ export function PaperTrading({
                       </td>
                       <td className="px-3 py-3 text-right text-sm text-zinc-400">{t.quantity}</td>
                       <td className="px-3 py-3 text-right text-sm text-zinc-400">₹{t.price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</td>
-                      <td className="px-5 py-3 text-right text-sm font-medium text-zinc-300">
+                      <td className="px-5 py-3 text-right text-sm font-medium text-zinc-700 dark:text-zinc-300">
                         ₹{(t.quantity * t.price).toLocaleString("en-IN", { maximumFractionDigits: 0 })}
                       </td>
                     </tr>
@@ -309,9 +309,9 @@ export function PaperTrading({
 
       {/* ── Trade Drawer (vaul) ── */}
       <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-        <DrawerContent className="bg-[#111113] border-white/[0.08]">
+        <DrawerContent className="bg-white dark:bg-[#111113] border-zinc-200 dark:border-white/[0.08]">
           <DrawerHeader className="text-left">
-            <DrawerTitle className="text-lg font-bold text-white flex items-center gap-2">
+            <DrawerTitle className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
               {orderSide === "BUY" ? (
                 <ShoppingCart className="h-5 w-5 text-emerald-400" />
               ) : (
@@ -326,13 +326,13 @@ export function PaperTrading({
 
           <div className="px-4 pb-4 space-y-4">
             {/* Price display */}
-            <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+            <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06]">
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-zinc-600 font-medium mb-1">Market Price</p>
                 {priceLoading ? (
-                  <Skeleton className="h-7 w-32 rounded bg-white/[0.06]" />
+                  <Skeleton className="h-7 w-32 rounded bg-zinc-200 dark:bg-white/[0.06]" />
                 ) : (
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                     ₹{currentPrice?.toLocaleString("en-IN", { maximumFractionDigits: 2 }) || "—"}
                   </p>
                 )}
@@ -340,7 +340,7 @@ export function PaperTrading({
               <button
                 onClick={fetchPrice}
                 disabled={priceLoading}
-                className="flex h-9 w-9 items-center justify-center rounded-lg hover:bg-white/[0.06] transition-colors"
+                className="flex h-9 w-9 items-center justify-center rounded-lg hover:bg-zinc-200 dark:hover:bg-white/[0.06] transition-colors"
                 title="Refresh price"
               >
                 <Zap className={`h-4 w-4 text-zinc-500 ${priceLoading ? "animate-pulse" : ""}`} />
@@ -359,8 +359,8 @@ export function PaperTrading({
                     onClick={() => setOrderQty(String(q))}
                     className={`flex-1 h-9 rounded-lg text-xs font-semibold border transition-all ${
                       orderQty === String(q)
-                        ? "bg-white/[0.08] border-white/[0.12] text-white"
-                        : "bg-white/[0.02] border-white/[0.06] text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]"
+                        ? "bg-zinc-100 dark:bg-white/[0.08] border-zinc-200 dark:border-white/[0.12] text-zinc-900 dark:text-white"
+                        : "bg-zinc-50 dark:bg-white/[0.02] border-zinc-200 dark:border-white/[0.06] text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.04]"
                     }`}
                   >
                     {q}
@@ -372,16 +372,16 @@ export function PaperTrading({
                 value={orderQty}
                 onChange={(e) => setOrderQty(e.target.value)}
                 min="1"
-                className="w-full h-10 mt-2 rounded-lg bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                className="w-full h-10 mt-2 rounded-lg bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.06] px-3 text-sm text-zinc-700 dark:text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                 placeholder="Custom quantity"
               />
             </div>
 
             {/* Order summary */}
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] space-y-2">
+            <div className="p-4 rounded-xl bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06] space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-zinc-500">Symbol</span>
-                <span className="text-white font-semibold">{selectedSymbol}</span>
+                <span className="text-zinc-900 dark:text-white font-semibold">{selectedSymbol}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-zinc-500">Side</span>
@@ -398,12 +398,12 @@ export function PaperTrading({
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-zinc-500">Quantity</span>
-                <span className="text-white">{orderQty || "0"}</span>
+                <span className="text-zinc-900 dark:text-white">{orderQty || "0"}</span>
               </div>
-              <Separator className="bg-white/[0.06]" />
+              <Separator className="bg-zinc-200 dark:bg-white/[0.06]" />
               <div className="flex items-center justify-between text-sm">
                 <span className="text-zinc-400 font-medium">Estimated Total</span>
-                <span className="text-lg font-bold text-white">
+                <span className="text-lg font-bold text-zinc-900 dark:text-white">
                   ₹{orderTotal.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
                 </span>
               </div>
@@ -412,7 +412,7 @@ export function PaperTrading({
 
           <DrawerFooter className="flex-row gap-3 pt-2 pb-6">
             <DrawerClose asChild>
-              <button className="flex-1 h-11 rounded-xl text-sm font-medium text-zinc-400 hover:text-white border border-white/[0.06] hover:bg-white/[0.04] transition-all">
+              <button className="flex-1 h-11 rounded-xl text-sm font-medium text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-white/[0.06] hover:bg-zinc-100 dark:hover:bg-white/[0.04] transition-all">
                 Cancel
               </button>
             </DrawerClose>

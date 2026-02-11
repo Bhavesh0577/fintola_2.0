@@ -96,8 +96,8 @@ export function ScreenerPanel({ onSelectSymbol }: { onSelectSymbol?: (sym: strin
               onClick={() => setActiveScreen(s.key)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                 active
-                  ? "bg-white/[0.08] text-white ring-1 ring-white/[0.1]"
-                  : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03] border border-white/[0.04]"
+                  ? "bg-zinc-100 dark:bg-white/[0.08] text-zinc-900 dark:text-white ring-1 ring-zinc-200 dark:ring-white/[0.1]"
+                  : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.04]"
               }`}
             >
               <s.icon className={`h-3.5 w-3.5 ${active ? s.color : ""}`} />
@@ -111,7 +111,7 @@ export function ScreenerPanel({ onSelectSymbol }: { onSelectSymbol?: (sym: strin
       {loading ? (
         <div className="space-y-2">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="h-12 rounded-lg bg-white/[0.04]" />
+            <Skeleton key={i} className="h-12 rounded-lg bg-zinc-100 dark:bg-white/[0.04]" />
           ))}
         </div>
       ) : !data || data.items.length === 0 ? (
@@ -121,12 +121,12 @@ export function ScreenerPanel({ onSelectSymbol }: { onSelectSymbol?: (sym: strin
           <p className="text-[12px] text-zinc-600 mt-1">This may be due to market hours or availability</p>
         </div>
       ) : (
-        <Card className="border-white/[0.06] bg-white/[0.02]">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardContent className="p-0">
             <div className="w-full max-h-[70vh] overflow-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-white/[0.06] hover:bg-transparent">
+                  <TableRow className="border-zinc-200 dark:border-white/[0.06] hover:bg-transparent">
                     <TableHead className="text-zinc-500 text-xs">#</TableHead>
                     <TableHead className="text-zinc-500 text-xs">Symbol</TableHead>
                     <TableHead className="text-zinc-500 text-xs">Name</TableHead>
@@ -143,20 +143,20 @@ export function ScreenerPanel({ onSelectSymbol }: { onSelectSymbol?: (sym: strin
                     return (
                       <TableRow
                         key={item.symbol}
-                        className="border-white/[0.04] hover:bg-white/[0.03] cursor-pointer transition-colors"
+                        className="border-zinc-200 dark:border-white/[0.04] hover:bg-zinc-100 dark:hover:bg-white/[0.03] cursor-pointer transition-colors"
                         onClick={() => onSelectSymbol?.(item.symbol)}
                       >
                         <TableCell className="text-[12px] text-zinc-600 w-8">{i + 1}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <span className="text-[13px] font-bold text-white">{item.symbol}</span>
-                            <Badge variant="outline" className="border-white/[0.06] bg-white/[0.02] text-[9px] text-zinc-600 px-1">
+                            <span className="text-[13px] font-bold text-zinc-900 dark:text-white">{item.symbol}</span>
+                            <Badge variant="outline" className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] text-[9px] text-zinc-600 px-1">
                               {item.exchange}
                             </Badge>
                           </div>
                         </TableCell>
                         <TableCell className="text-[13px] text-zinc-400 max-w-[180px] truncate">{item.shortName}</TableCell>
-                        <TableCell className="text-[13px] text-white text-right tabular-nums font-medium">
+                        <TableCell className="text-[13px] text-zinc-900 dark:text-white text-right tabular-nums font-medium">
                           ${item.price?.toFixed(2) ?? "—"}
                         </TableCell>
                         <TableCell className="text-right">

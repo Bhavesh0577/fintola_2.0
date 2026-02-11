@@ -13,6 +13,8 @@ import {
   getEMAOptions,
   Marker
 } from "./chart-utils";
+import { DateRangePicker } from "./date-range-picker";
+import type { DateRange } from "react-day-picker";
 
 interface StatsChartProps {
   symbol?: string;
@@ -52,13 +54,23 @@ export function StatsChart({ symbol = "TATASTEEL.NS" }: StatsChartProps) {
   const [aiLoading, setAiLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   // Function to fetch data for a specific symbol
   const fetchSymbolData = async (symbolToFetch: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/finance?symbol=${symbolToFetch}`);
+      let url = `/api/finance?symbol=${symbolToFetch}`;
+      if (dateRange?.from) {
+        const fromStr = dateRange.from.toISOString().split("T")[0];
+        url += `&start=${fromStr}`;
+        if (dateRange.to) {
+          const toStr = dateRange.to.toISOString().split("T")[0];
+          url += `&end=${toStr}`;
+        }
+      }
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Failed to fetch data for ${symbolToFetch}`);
       }
@@ -209,7 +221,7 @@ export function StatsChart({ symbol = "TATASTEEL.NS" }: StatsChartProps) {
         fetchAIPredictions(symbol);
       }
     }
-  }, [symbol]);
+  }, [symbol, dateRange]);
 
   // Effect to add or remove indicators when toggles change or when data is available
   useEffect(() => {
@@ -264,7 +276,7 @@ export function StatsChart({ symbol = "TATASTEEL.NS" }: StatsChartProps) {
           className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ring-1 ring-inset ${
             showSMA
               ? "bg-amber-500/10 text-amber-400 ring-amber-500/25"
-              : "bg-white/[0.03] text-zinc-500 ring-white/[0.06] hover:bg-white/[0.06] hover:text-zinc-300"
+              : "bg-zinc-100 dark:bg-white/[0.03] text-zinc-500 ring-zinc-200 dark:ring-white/[0.06] hover:bg-zinc-200 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-300"
           }`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${showSMA ? "bg-amber-400" : "bg-zinc-600"}`} />
@@ -275,14 +287,18 @@ export function StatsChart({ symbol = "TATASTEEL.NS" }: StatsChartProps) {
           className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ring-1 ring-inset ${
             showEMA
               ? "bg-indigo-500/10 text-indigo-400 ring-indigo-500/25"
-              : "bg-white/[0.03] text-zinc-500 ring-white/[0.06] hover:bg-white/[0.06] hover:text-zinc-300"
+              : "bg-zinc-100 dark:bg-white/[0.03] text-zinc-500 ring-zinc-200 dark:ring-white/[0.06] hover:bg-zinc-200 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-300"
           }`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${showEMA ? "bg-indigo-400" : "bg-zinc-600"}`} />
           EMA
         </button>
 
-        <div className="h-4 w-px bg-white/[0.06] mx-1 hidden sm:block" />
+        <div className="h-4 w-px bg-zinc-200 dark:bg-white/[0.06] mx-1 hidden sm:block" />
+
+        <DateRangePicker dateRange={dateRange} onDateRangeChange={setDateRange} />
+
+        <div className="h-4 w-px bg-zinc-200 dark:bg-white/[0.06] mx-1 hidden sm:block" />
 
         <button
           onClick={() => setUseAI((prev) => !prev)}
@@ -290,7 +306,7 @@ export function StatsChart({ symbol = "TATASTEEL.NS" }: StatsChartProps) {
           className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ring-1 ring-inset ${
             useAI
               ? "bg-violet-500/15 text-violet-300 ring-violet-500/30 shadow-sm shadow-violet-500/10"
-              : "bg-white/[0.03] text-zinc-500 ring-white/[0.06] hover:bg-white/[0.06] hover:text-zinc-300"
+              : "bg-zinc-100 dark:bg-white/[0.03] text-zinc-500 ring-zinc-200 dark:ring-white/[0.06] hover:bg-zinc-200 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-300"
           }`}
         >
           {aiLoading ? (
@@ -378,22 +394,22 @@ export function StatsChart({ symbol = "TATASTEEL.NS" }: StatsChartProps) {
                 <div>
                   <h5 className="text-[10px] font-semibold uppercase tracking-[0.1em] text-zinc-500 mb-2">Technical Indicators</h5>
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="rounded-lg bg-white/[0.03] ring-1 ring-white/[0.04] px-3 py-2">
-                      <span className="text-[10px] text-zinc-600 block">SMA (5)</span>
-                      <span className="text-sm font-semibold text-zinc-300">{aiAnalysis.analysis.technicalIndicators.sma5.toFixed(2)}</span>
+                    <div className="rounded-lg bg-zinc-50 dark:bg-white/[0.03] ring-1 ring-zinc-200 dark:ring-white/[0.04] px-3 py-2">
+                      <span className="text-[10px] text-zinc-500 dark:text-zinc-600 block">SMA (5)</span>
+                      <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{aiAnalysis.analysis.technicalIndicators.sma5.toFixed(2)}</span>
                     </div>
-                    <div className="rounded-lg bg-white/[0.03] ring-1 ring-white/[0.04] px-3 py-2">
-                      <span className="text-[10px] text-zinc-600 block">SMA (20)</span>
-                      <span className="text-sm font-semibold text-zinc-300">{aiAnalysis.analysis.technicalIndicators.sma20.toFixed(2)}</span>
+                    <div className="rounded-lg bg-zinc-50 dark:bg-white/[0.03] ring-1 ring-zinc-200 dark:ring-white/[0.04] px-3 py-2">
+                      <span className="text-[10px] text-zinc-500 dark:text-zinc-600 block">SMA (20)</span>
+                      <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{aiAnalysis.analysis.technicalIndicators.sma20.toFixed(2)}</span>
                     </div>
-                    <div className="rounded-lg bg-white/[0.03] ring-1 ring-white/[0.04] px-3 py-2">
-                      <span className="text-[10px] text-zinc-600 block">Trend</span>
+                    <div className="rounded-lg bg-zinc-50 dark:bg-white/[0.03] ring-1 ring-zinc-200 dark:ring-white/[0.04] px-3 py-2">
+                      <span className="text-[10px] text-zinc-500 dark:text-zinc-600 block">Trend</span>
                       <span className={`text-sm font-semibold ${aiAnalysis.analysis.technicalIndicators.trend === "Bullish" ? "text-emerald-400" : "text-rose-400"}`}>
                         {aiAnalysis.analysis.technicalIndicators.trend}
                       </span>
                     </div>
-                    <div className="rounded-lg bg-white/[0.03] ring-1 ring-white/[0.04] px-3 py-2">
-                      <span className="text-[10px] text-zinc-600 block">Momentum</span>
+                    <div className="rounded-lg bg-zinc-50 dark:bg-white/[0.03] ring-1 ring-zinc-200 dark:ring-white/[0.04] px-3 py-2">
+                      <span className="text-[10px] text-zinc-500 dark:text-zinc-600 block">Momentum</span>
                       <span className={`text-sm font-semibold ${aiAnalysis.analysis.technicalIndicators.momentum === "Positive" ? "text-emerald-400" : "text-rose-400"}`}>
                         {aiAnalysis.analysis.technicalIndicators.momentum}
                       </span>

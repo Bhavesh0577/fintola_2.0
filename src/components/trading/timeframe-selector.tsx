@@ -20,13 +20,13 @@ const timeframes = [
 
 export function TimeframeSelector({ currentTimeframe, onTimeframeChange }: TimeframeSelectorProps) {
     return (
-        <div className="flex bg-[#1E222D] rounded-md overflow-hidden">
+        <div className="flex bg-zinc-100 dark:bg-[#1E222D] rounded-md overflow-hidden">
             {timeframes.map((timeframe) => (
                 <button
                     key={timeframe.value}
                     className={`px-3 py-1 text-xs ${currentTimeframe === timeframe.value
                             ? "bg-[#2962FF] text-white"
-                            : "text-gray-400 hover:bg-[#2A2E39] hover:text-white"
+                            : "text-zinc-500 dark:text-gray-400 hover:bg-zinc-200 dark:hover:bg-[#2A2E39] hover:text-zinc-900 dark:hover:text-white"
                         }`}
                     onClick={() => onTimeframeChange(timeframe.value)}
                 >

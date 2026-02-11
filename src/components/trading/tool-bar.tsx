@@ -18,7 +18,7 @@ import {
 
 export function ToolBar() {
     return (
-        <div className="w-12 border-r border-gray-800 flex flex-col items-center py-4 gap-6">
+        <div className="w-12 border-r border-zinc-200 dark:border-gray-800 flex flex-col items-center py-4 gap-6">
             <div className="flex flex-col gap-2">
                 <ToolButton icon={<MousePointer className="h-4 w-4" />} tooltip="Cursor" active />
                 <ToolButton icon={<Crosshair className="h-4 w-4" />} tooltip="Crosshair" />
@@ -59,12 +59,12 @@ function ToolButton({ icon, tooltip, active = false }: ToolButtonProps) {
     return (
         <div className="relative group">
             <button
-                className={`w-8 h-8 flex items-center justify-center rounded ${active ? 'bg-[#2962FF] text-white' : 'text-gray-400 hover:bg-[#2A2E39] hover:text-white'
+                className={`w-8 h-8 flex items-center justify-center rounded ${active ? 'bg-[#2962FF] text-white' : 'text-zinc-500 dark:text-gray-400 hover:bg-zinc-100 dark:hover:bg-[#2A2E39] hover:text-zinc-900 dark:hover:text-white'
                     }`}
             >
                 {icon}
             </button>
-            <div className="absolute left-full ml-2 px-2 py-1 bg-[#1E222D] text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+            <div className="absolute left-full ml-2 px-2 py-1 bg-zinc-100 dark:bg-[#1E222D] text-zinc-900 dark:text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
                 {tooltip}
             </div>
         </div>

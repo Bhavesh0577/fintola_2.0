@@ -79,15 +79,15 @@ export function MarketIndices() {
     }, []);
 
     return (
-        <div className="p-3 border-b border-gray-800">
-            <h3 className="text-xs font-semibold mb-2 text-gray-400">INDICES</h3>
+        <div className="p-3 border-b border-zinc-200 dark:border-gray-800">
+            <h3 className="text-xs font-semibold mb-2 text-zinc-500 dark:text-gray-400">INDICES</h3>
 
             {loading ? (
                 <div className="space-y-2">
                     {[...Array(5)].map((_, i) => (
                         <div key={i} className="animate-pulse flex justify-between">
-                            <div className="h-3 w-20 bg-gray-700 rounded"></div>
-                            <div className="h-3 w-16 bg-gray-700 rounded"></div>
+                            <div className="h-3 w-20 bg-zinc-200 dark:bg-gray-700 rounded"></div>
+                            <div className="h-3 w-16 bg-zinc-200 dark:bg-gray-700 rounded"></div>
                         </div>
                     ))}
                 </div>

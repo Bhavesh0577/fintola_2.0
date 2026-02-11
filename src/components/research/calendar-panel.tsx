@@ -59,13 +59,13 @@ function UpcomingEventCard({
   color: string
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.03] transition-all">
+    <div className="flex items-start gap-3 rounded-xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] p-4 hover:bg-zinc-100 dark:hover:bg-white/[0.03] transition-all">
       <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${color}`}>
         <Icon className="h-4 w-4 text-white" />
       </div>
       <div className="min-w-0">
         <p className="text-[11px] uppercase tracking-wider text-zinc-500">{label}</p>
-        <p className="text-sm font-semibold text-white mt-0.5">{value}</p>
+        <p className="text-sm font-semibold text-zinc-900 dark:text-white mt-0.5">{value}</p>
         {sub && <p className="text-[11px] text-zinc-600 mt-0.5">{sub}</p>}
       </div>
     </div>
@@ -92,10 +92,10 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
       <div className="space-y-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl bg-white/[0.04]" />
+            <Skeleton key={i} className="h-24 rounded-xl bg-zinc-100 dark:bg-white/[0.04]" />
           ))}
         </div>
-        <Skeleton className="h-64 rounded-xl bg-white/[0.04]" />
+        <Skeleton className="h-64 rounded-xl bg-zinc-100 dark:bg-white/[0.04]" />
       </div>
     )
   }
@@ -122,7 +122,7 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
     <div className="space-y-6">
       {/* Upcoming Events Cards */}
       <div>
-        <h3 className="text-sm font-semibold text-zinc-300 mb-3 flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-3 flex items-center gap-2">
           <Clock className="h-4 w-4 text-indigo-400" /> Upcoming Events
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -158,9 +158,9 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
 
       {/* Earnings History */}
       {data.earnings_dates && data.earnings_dates.length > 0 && (
-        <Card className="border-white/[0.06] bg-white/[0.02] overflow-hidden">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-zinc-300 flex items-center gap-2">
+            <CardTitle className="text-sm text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
               <CalendarIcon className="h-4 w-4 text-indigo-400" /> Earnings History
             </CardTitle>
           </CardHeader>
@@ -168,7 +168,7 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
             <ScrollArea className="w-full">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-white/[0.06] hover:bg-transparent">
+                  <TableRow className="border-zinc-200 dark:border-white/[0.06] hover:bg-transparent">
                     <TableHead className="text-zinc-500 text-xs">Date</TableHead>
                     <TableHead className="text-zinc-500 text-xs text-right">EPS Estimate</TableHead>
                     <TableHead className="text-zinc-500 text-xs text-right">Reported EPS</TableHead>
@@ -183,8 +183,8 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
                     const miss = e.surprise != null && e.surprise < 0
 
                     return (
-                      <TableRow key={i} className="border-white/[0.04] hover:bg-white/[0.02]">
-                        <TableCell className="text-[13px] text-zinc-300 font-medium">
+                      <TableRow key={i} className="border-zinc-200 dark:border-white/[0.04] hover:bg-zinc-100 dark:hover:bg-white/[0.02]">
+                        <TableCell className="text-[13px] text-zinc-700 dark:text-zinc-300 font-medium">
                           <div className="flex items-center gap-2">
                             {formatDate(e.date)}
                             {isFuture && (
@@ -198,7 +198,7 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
                           {e.epsEstimate != null ? `₹${e.epsEstimate}` : "—"}
                         </TableCell>
                         <TableCell className="text-[13px] text-right tabular-nums">
-                          <span className={e.epsActual != null ? (beat ? "text-emerald-400" : miss ? "text-red-400" : "text-zinc-300") : "text-zinc-600"}>
+                          <span className={e.epsActual != null ? (beat ? "text-emerald-400" : miss ? "text-red-400" : "text-zinc-700 dark:text-zinc-300") : "text-zinc-600"}>
                             {e.epsActual != null ? `₹${e.epsActual}` : "—"}
                           </span>
                         </TableCell>
@@ -230,9 +230,9 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
       {/* Dividends & Splits side by side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Dividends */}
-        <Card className="border-white/[0.06] bg-white/[0.02]">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-zinc-300 flex items-center gap-2">
+            <CardTitle className="text-sm text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
               <DollarSign className="h-4 w-4 text-emerald-400" /> Dividend History
             </CardTitle>
           </CardHeader>
@@ -240,7 +240,7 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
             {data.dividends && data.dividends.length > 0 ? (
               <div className="space-y-2">
                 {data.dividends.map((d, i) => (
-                  <div key={i} className="flex items-center justify-between py-1.5 border-b border-white/[0.04] last:border-0">
+                  <div key={i} className="flex items-center justify-between py-1.5 border-b border-zinc-200 dark:border-white/[0.04] last:border-0">
                     <span className="text-[12px] text-zinc-500">{formatDate(d.date)}</span>
                     <Badge variant="outline" className="border-emerald-500/20 bg-emerald-500/5 text-[11px] text-emerald-400">
                       ₹{d.amount?.toFixed(2) ?? "—"}
@@ -255,9 +255,9 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
         </Card>
 
         {/* Splits */}
-        <Card className="border-white/[0.06] bg-white/[0.02]">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-zinc-300 flex items-center gap-2">
+            <CardTitle className="text-sm text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
               <Scissors className="h-4 w-4 text-amber-400" /> Stock Splits
             </CardTitle>
           </CardHeader>
@@ -265,7 +265,7 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
             {data.splits && data.splits.length > 0 ? (
               <div className="space-y-2">
                 {data.splits.map((s, i) => (
-                  <div key={i} className="flex items-center justify-between py-1.5 border-b border-white/[0.04] last:border-0">
+                  <div key={i} className="flex items-center justify-between py-1.5 border-b border-zinc-200 dark:border-white/[0.04] last:border-0">
                     <span className="text-[12px] text-zinc-500">{formatDate(s.date)}</span>
                     <Badge variant="outline" className="border-amber-500/20 bg-amber-500/5 text-[11px] text-amber-400">
                       {s.ratio ? `${s.ratio}:1` : "—"}

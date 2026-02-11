@@ -63,9 +63,9 @@ function formatPct(v: unknown): string {
 function RatioCard({ label, value, fmt = "num" }: { label: string; value: unknown; fmt?: "num" | "pct" | "raw" }) {
   const display = fmt === "pct" ? formatPct(value) : fmt === "raw" ? (value?.toString() ?? "—") : formatNum(value)
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5">
+    <div className="rounded-xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] p-3.5">
       <p className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
-      <p className="text-lg font-semibold text-white tabular-nums">{display}</p>
+      <p className="text-lg font-semibold text-zinc-900 dark:text-white tabular-nums">{display}</p>
     </div>
   )
 }
@@ -125,8 +125,8 @@ function FinancialTable({
     <ScrollArea className="w-full">
       <Table>
         <TableHeader>
-          <TableRow className="border-white/[0.06] hover:bg-transparent">
-            <TableHead className="text-zinc-500 text-xs w-[200px] sticky left-0 bg-[#09090b] z-10">Metric</TableHead>
+          <TableRow className="border-zinc-200 dark:border-white/[0.06] hover:bg-transparent">
+            <TableHead className="text-zinc-500 text-xs w-[200px] sticky left-0 bg-white dark:bg-[#09090b] z-10">Metric</TableHead>
             {data.map((rec, i) => (
               <TableHead key={i} className="text-zinc-500 text-xs text-right min-w-[120px]">
                 {String(rec.date).slice(0, 10)}
@@ -136,12 +136,12 @@ function FinancialTable({
         </TableHeader>
         <TableBody>
           {rows.map((key) => (
-            <TableRow key={key} className="border-white/[0.04] hover:bg-white/[0.02]">
-              <TableCell className="text-[13px] text-zinc-400 font-medium sticky left-0 bg-[#09090b] z-10">
+            <TableRow key={key} className="border-zinc-200 dark:border-white/[0.04] hover:bg-zinc-100 dark:hover:bg-white/[0.02]">
+              <TableCell className="text-[13px] text-zinc-400 font-medium sticky left-0 bg-white dark:bg-[#09090b] z-10">
                 {key.replace(/([A-Z])/g, " $1").trim()}
               </TableCell>
               {data.map((rec, i) => (
-                <TableCell key={i} className="text-right text-[13px] text-zinc-300 tabular-nums">
+                <TableCell key={i} className="text-right text-[13px] text-zinc-700 dark:text-zinc-300 tabular-nums">
                   {formatNum(rec[key])}
                 </TableCell>
               ))}
@@ -174,10 +174,10 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
       <div className="space-y-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="h-20 rounded-xl bg-white/[0.04]" />
+            <Skeleton key={i} className="h-20 rounded-xl bg-zinc-100 dark:bg-white/[0.04]" />
           ))}
         </div>
-        <Skeleton className="h-64 rounded-xl bg-white/[0.04]" />
+        <Skeleton className="h-64 rounded-xl bg-zinc-100 dark:bg-white/[0.04]" />
       </div>
     )
   }
@@ -200,14 +200,14 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
       {/* Company header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white">{String(ratios.shortName || symbol)}</h2>
+          <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{String(ratios.shortName || symbol)}</h2>
           <p className="text-sm text-zinc-500">{String(ratios.sector || "")} · {String(ratios.industry || "")}</p>
         </div>
         {targets && (
           <div className="flex items-center gap-3">
             <div className="text-right">
               <p className="text-[10px] uppercase tracking-wider text-zinc-600">Analyst Target</p>
-              <p className="text-lg font-bold text-white">₹{targets.mean?.toLocaleString("en-IN") ?? "—"}</p>
+              <p className="text-lg font-bold text-zinc-900 dark:text-white">₹{targets.mean?.toLocaleString("en-IN") ?? "—"}</p>
             </div>
             <Target className="h-5 w-5 text-indigo-400" />
           </div>
@@ -230,10 +230,10 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
 
       {/* Analyst Targets Bar */}
       {targets && targets.low && targets.high && targets.current && (
-        <Card className="border-white/[0.06] bg-white/[0.02]">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardContent className="py-4 px-5">
             <p className="text-[11px] uppercase tracking-wider text-zinc-500 mb-3">Analyst Price Target Range</p>
-            <div className="relative h-3 rounded-full bg-white/[0.04] overflow-hidden">
+            <div className="relative h-3 rounded-full bg-zinc-100 dark:bg-white/[0.04] overflow-hidden">
               <div
                 className="absolute inset-y-0 bg-gradient-to-r from-red-500/40 via-amber-500/40 to-emerald-500/40 rounded-full"
                 style={{ left: "0%", width: "100%" }}
@@ -259,13 +259,13 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
       <div className="flex items-center gap-2">
         <button
           onClick={() => setPeriod("annual")}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${period === "annual" ? "bg-white/[0.08] text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${period === "annual" ? "bg-zinc-100 dark:bg-white/[0.08] text-zinc-900 dark:text-white" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"}`}
         >
           Annual
         </button>
         <button
           onClick={() => setPeriod("quarterly")}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${period === "quarterly" ? "bg-white/[0.08] text-white" : "text-zinc-500 hover:text-zinc-300"}`}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${period === "quarterly" ? "bg-zinc-100 dark:bg-white/[0.08] text-zinc-900 dark:text-white" : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"}`}
         >
           Quarterly
         </button>
@@ -273,20 +273,20 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
 
       {/* Financial Statements Tabs */}
       <Tabs defaultValue="income" className="w-full">
-        <TabsList className="bg-white/[0.03] border border-white/[0.06]">
-          <TabsTrigger value="income" className="text-xs data-[state=active]:bg-white/[0.08] data-[state=active]:text-white">
+        <TabsList className="bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06]">
+          <TabsTrigger value="income" className="text-xs data-[state=active]:bg-white dark:data-[state=active]:bg-white/[0.08] data-[state=active]:text-zinc-900 dark:data-[state=active]:text-white">
             <DollarSign className="h-3.5 w-3.5 mr-1.5" /> Income
           </TabsTrigger>
-          <TabsTrigger value="balance" className="text-xs data-[state=active]:bg-white/[0.08] data-[state=active]:text-white">
+          <TabsTrigger value="balance" className="text-xs data-[state=active]:bg-white dark:data-[state=active]:bg-white/[0.08] data-[state=active]:text-zinc-900 dark:data-[state=active]:text-white">
             <BarChart3 className="h-3.5 w-3.5 mr-1.5" /> Balance Sheet
           </TabsTrigger>
-          <TabsTrigger value="cashflow" className="text-xs data-[state=active]:bg-white/[0.08] data-[state=active]:text-white">
+          <TabsTrigger value="cashflow" className="text-xs data-[state=active]:bg-white dark:data-[state=active]:bg-white/[0.08] data-[state=active]:text-zinc-900 dark:data-[state=active]:text-white">
             <FileText className="h-3.5 w-3.5 mr-1.5" /> Cash Flow
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="income" className="mt-4">
-          <Card className="border-white/[0.06] bg-white/[0.02] overflow-hidden">
+          <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
             <CardContent className="p-0">
               <FinancialTable
                 data={period === "annual" ? data.income_stmt : data.quarterly_income}
@@ -297,7 +297,7 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
         </TabsContent>
 
         <TabsContent value="balance" className="mt-4">
-          <Card className="border-white/[0.06] bg-white/[0.02] overflow-hidden">
+          <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
             <CardContent className="p-0">
               <FinancialTable
                 data={period === "annual" ? data.balance_sheet : data.quarterly_balance}
@@ -308,7 +308,7 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
         </TabsContent>
 
         <TabsContent value="cashflow" className="mt-4">
-          <Card className="border-white/[0.06] bg-white/[0.02] overflow-hidden">
+          <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
             <CardContent className="p-0">
               <FinancialTable
                 data={period === "annual" ? data.cash_flow : data.quarterly_cashflow}
@@ -321,9 +321,9 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
 
       {/* Recommendations */}
       {data.recommendations && data.recommendations.length > 0 && (
-        <Card className="border-white/[0.06] bg-white/[0.02]">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-zinc-300 flex items-center gap-2">
+            <CardTitle className="text-sm text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
               <Target className="h-4 w-4 text-indigo-400" /> Analyst Recommendations
             </CardTitle>
           </CardHeader>
@@ -335,7 +335,7 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
                 const sell = Number(rec["Sell"] || rec["sell"] || 0) + Number(rec["strongSell"] || 0)
                 const period = String(rec["date"] || "").slice(0, 7)
                 return (
-                  <div key={i} className="flex-1 min-w-[100px] rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 text-center">
+                  <div key={i} className="flex-1 min-w-[100px] rounded-lg border border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] p-3 text-center">
                     <p className="text-[10px] text-zinc-600 mb-1.5">{period}</p>
                     <div className="flex justify-center gap-3 text-xs">
                       <span className="text-emerald-400">{buy} Buy</span>

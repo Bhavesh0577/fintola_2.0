@@ -202,14 +202,14 @@ export function VaultTable() {
         </TableHeader>
         <TableBody>
           {marketData.map((stock) => (
-            <TableRow key={stock.symbol} className="border-white/[0.03] hover:bg-white/[0.02] transition-colors cursor-pointer">
+            <TableRow key={stock.symbol} className="border-zinc-200 dark:border-white/[0.03] hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors cursor-pointer">
               <TableCell className="font-medium">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.04] ring-1 ring-white/[0.06] text-xs font-bold text-zinc-400">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 dark:bg-white/[0.04] ring-1 ring-zinc-200 dark:ring-white/[0.06] text-xs font-bold text-zinc-500 dark:text-zinc-400">
                     {stock.symbol.substring(0, 2)}
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-zinc-200">{stock.name}</div>
+                    <div className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{stock.name}</div>
                     <div className="text-xs text-zinc-500 mt-0.5">{stock.price}</div>
                   </div>
                 </div>
@@ -243,7 +243,7 @@ export function VaultTable() {
                       className={`h-1.5 w-3 rounded-full ${
                         i < (stock.volatility === "high" ? 3 : stock.volatility === "medium" ? 2 : 1)
                           ? stock.volatility === "high" ? "bg-rose-400" : stock.volatility === "medium" ? "bg-amber-400" : "bg-emerald-400"
-                          : "bg-white/[0.06]"
+                          : "bg-zinc-200 dark:bg-white/[0.06]"
                       }`}
                     />
                   ))}

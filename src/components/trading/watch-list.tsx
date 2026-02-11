@@ -142,27 +142,27 @@ export function WatchList({ selectedSymbol, onSelectSymbol }: WatchListProps) {
 
     return (
         <div className="flex flex-col h-[calc(100%-120px)]">
-            <div className="p-3 border-b border-gray-800">
-                <h3 className="text-xs font-semibold mb-2 text-gray-400">WATCHLIST</h3>
+            <div className="p-3 border-b border-zinc-200 dark:border-gray-800">
+                <h3 className="text-xs font-semibold mb-2 text-zinc-500 dark:text-gray-400">WATCHLIST</h3>
 
                 <div className="flex mb-2">
                     <Input
                         placeholder="Search..."
-                        className="bg-[#2A2E39] border-none text-xs h-7"
+                        className="bg-zinc-100 dark:bg-[#2A2E39] border-none text-xs h-7"
                         value={searchQuery}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                     />
                 </div>
 
-                <div className="flex border-b border-gray-800">
+                <div className="flex border-b border-zinc-200 dark:border-gray-800">
                     <button
-                        className={`text-xs py-1 px-3 ${activeTab === 'all' ? 'text-[#2962FF] border-b-2 border-[#2962FF]' : 'text-gray-400'}`}
+                        className={`text-xs py-1 px-3 ${activeTab === 'all' ? 'text-[#2962FF] border-b-2 border-[#2962FF]' : 'text-zinc-400 dark:text-gray-400'}`}
                         onClick={() => setActiveTab('all')}
                     >
                         All
                     </button>
                     <button
-                        className={`text-xs py-1 px-3 ${activeTab === 'favorites' ? 'text-[#2962FF] border-b-2 border-[#2962FF]' : 'text-gray-400'}`}
+                        className={`text-xs py-1 px-3 ${activeTab === 'favorites' ? 'text-[#2962FF] border-b-2 border-[#2962FF]' : 'text-zinc-400 dark:text-gray-400'}`}
                         onClick={() => setActiveTab('favorites')}
                     >
                         Favorites
@@ -175,28 +175,28 @@ export function WatchList({ selectedSymbol, onSelectSymbol }: WatchListProps) {
                     <div className="p-3 space-y-3">
                         {[...Array(10)].map((_, i) => (
                             <div key={i} className="animate-pulse flex justify-between">
-                                <div className="h-4 w-20 bg-gray-700 rounded"></div>
-                                <div className="h-4 w-16 bg-gray-700 rounded"></div>
+                                <div className="h-4 w-20 bg-zinc-200 dark:bg-gray-700 rounded"></div>
+                                <div className="h-4 w-16 bg-zinc-200 dark:bg-gray-700 rounded"></div>
                             </div>
                         ))}
                     </div>
                 ) : (
                     <div className="p-3 space-y-1">
                         {filteredStocks.length === 0 ? (
-                            <div className="text-center text-gray-400 text-xs py-4">
+                            <div className="text-center text-zinc-400 dark:text-gray-400 text-xs py-4">
                                 No stocks found
                             </div>
                         ) : (
                             filteredStocks.map((stock) => (
                                 <div
                                     key={stock.symbol}
-                                    className={`flex justify-between items-center p-2 rounded text-xs cursor-pointer ${selectedSymbol === stock.symbol ? 'bg-[#2A2E39]' : 'hover:bg-[#1E222D]'
+                                    className={`flex justify-between items-center p-2 rounded text-xs cursor-pointer ${selectedSymbol === stock.symbol ? 'bg-zinc-100 dark:bg-[#2A2E39]' : 'hover:bg-zinc-50 dark:hover:bg-[#1E222D]'
                                         }`}
                                     onClick={() => onSelectSymbol(stock.symbol)}
                                 >
                                     <div className="flex items-center gap-2">
                                         <button
-                                            className="text-gray-400 hover:text-yellow-400"
+                                            className="text-zinc-400 dark:text-gray-400 hover:text-yellow-400"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 toggleFavorite(stock.symbol);
@@ -206,7 +206,7 @@ export function WatchList({ selectedSymbol, onSelectSymbol }: WatchListProps) {
                                         </button>
                                         <div>
                                             <div className="font-medium">{stock.name}</div>
-                                            <div className="text-gray-400 text-[10px]">{stock.symbol}</div>
+                                            <div className="text-zinc-400 dark:text-gray-400 text-[10px]">{stock.symbol}</div>
                                         </div>
                                     </div>
                                     <div>
@@ -223,9 +223,9 @@ export function WatchList({ selectedSymbol, onSelectSymbol }: WatchListProps) {
                 )}
             </div>
 
-            <div className="p-3 border-t border-gray-800">
+            <div className="p-3 border-t border-zinc-200 dark:border-gray-800">
                 <Button
-                    className="w-full bg-[#2A2E39] hover:bg-[#363A45] text-xs h-8 flex items-center justify-center gap-1"
+                    className="w-full bg-zinc-100 dark:bg-[#2A2E39] hover:bg-zinc-200 dark:hover:bg-[#363A45] text-xs h-8 flex items-center justify-center gap-1"
                 >
                     <Plus className="h-3 w-3" /> Add Symbol
                 </Button>

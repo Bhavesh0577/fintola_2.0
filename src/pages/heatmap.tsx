@@ -2,17 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { PortfolioTracker } from "@/components/portfolio-tracker"
-import { PaperTrading } from "@/components/paper-trading"
+import { SectorHeatmap } from "@/components/sector-heatmap"
 import { CommandSearch } from "@/components/command-search"
-import { ChartUI } from "@/components/chart-ui"
 import { Toaster } from "sonner"
 import {
   BarChart3,
   Bell,
   Briefcase,
   Globe,
+  Grid3X3,
   LayoutDashboard,
   LineChart,
   LogOut,
@@ -24,8 +22,6 @@ import {
   Wallet,
   Zap,
   Clock,
-  Eye,
-  Grid3X3,
   type LucideIcon,
 } from "lucide-react"
 import "../app/globals.css"
@@ -68,16 +64,14 @@ function NavItem({
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   PORTFOLIO & PAPER TRADING PAGE
+   SECTOR HEATMAP PAGE
    ═══════════════════════════════════════════════════════════════════ */
-export default function PortfolioPage() {
+export default function HeatmapPage() {
   const { user, isLoaded } = useUser()
   const router = useRouter()
-  const [selectedSymbol, setSelectedSymbol] = useState("RELIANCE.NS")
   const [isClient, setIsClient] = useState(false)
   const [currentTime, setCurrentTime] = useState("")
   const [cmdOpen, setCmdOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<"portfolio" | "paper">("portfolio")
 
   useEffect(() => {
     setIsClient(true)
@@ -112,20 +106,16 @@ export default function PortfolioPage() {
     return () => clearInterval(id)
   }, [])
 
-  const handleCommandSelect = useCallback((symbol: string) => {
-    setSelectedSymbol(symbol)
-  }, [])
-
   /* ── Loading / Auth ── */
   if (!isClient || !isLoaded) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#09090b]">
+      <div className="flex h-screen items-center justify-center bg-white dark:bg-[#09090b]">
         <div className="flex flex-col items-center gap-4">
           <div className="relative h-10 w-10">
-            <div className="absolute inset-0 rounded-full border-2 border-zinc-800" />
+            <div className="absolute inset-0 rounded-full border-2 border-zinc-200 dark:border-zinc-800" />
             <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-indigo-500" />
           </div>
-          <p className="text-sm text-zinc-600 animate-pulse">Loading Fintola…</p>
+          <p className="text-sm text-zinc-500 animate-pulse">Loading Fintola…</p>
         </div>
       </div>
     )
@@ -151,10 +141,9 @@ export default function PortfolioPage() {
             <NavItem icon={BarChart3} label="Trading" onClick={() => router.push("/trade")} />
             <NavItem icon={LineChart} label="Intraday" onClick={() => { window.location.href = "https://www.tradingview.com/chart/8daX0FdT/" }} />
             <NavItem icon={Globe} label="Markets" badge="Live" onClick={() => router.push("/dash")} />
-            <NavItem icon={Briefcase} label="Portfolio" active onClick={() => setActiveTab("portfolio")} />
-            <NavItem icon={Zap} label="Paper Trading" active={activeTab === "paper"} onClick={() => setActiveTab("paper")} />
+            <NavItem icon={Briefcase} label="Portfolio" onClick={() => router.push("/portfolio")} />
             <NavItem icon={ScanSearch} label="Research" badge="New" onClick={() => router.push("/research")} />
-            <NavItem icon={Grid3X3} label="Heatmap" badge="New" onClick={() => router.push("/heatmap")} />
+            <NavItem icon={Grid3X3} label="Heatmap" active badge="New" />
             <NavItem icon={Sparkles} label="AI Insights" onClick={() => router.push("/dash")} />
           </div>
           <Separator className="my-4 bg-zinc-200 dark:bg-white/[0.04]" />
@@ -194,7 +183,7 @@ export default function PortfolioPage() {
             <div className="flex lg:hidden h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600">
               <TrendingUp className="h-4 w-4 text-white" />
             </div>
-            {/* Search Trigger — opens ⌘K */}
+            {/* Search Trigger */}
             <button
               title="Search (Ctrl+K)"
               onClick={() => setCmdOpen(true)}
@@ -209,7 +198,7 @@ export default function PortfolioPage() {
           </div>
 
           {/* Command Palette */}
-          <CommandSearch open={cmdOpen} onOpenChange={setCmdOpen} onSelect={handleCommandSelect} />
+          <CommandSearch open={cmdOpen} onOpenChange={setCmdOpen} onSelect={() => {}} />
 
           <div className="flex items-center gap-2">
             <div className="hidden md:flex items-center gap-2 mr-3 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-white/[0.03] ring-1 ring-zinc-200 dark:ring-white/[0.06]">
@@ -232,82 +221,33 @@ export default function PortfolioPage() {
         </header>
 
         {/* Content */}
-        <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
+        <div className="p-6 space-y-6 max-w-[1800px] mx-auto">
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
-                {activeTab === "portfolio" ? "Portfolio Tracker" : "Paper Trading"}
+              <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-rose-600 shadow-lg shadow-orange-500/20">
+                  <Grid3X3 className="h-4 w-4 text-white" />
+                </div>
+                Sector Heatmap
               </h1>
-              <p className="text-sm text-zinc-500 mt-1">
-                {activeTab === "portfolio"
-                  ? "Track your real holdings & P&L against live market prices."
-                  : "Practice trading with ₹10,00,000 virtual cash · No real money involved."}
+              <p className="text-sm text-zinc-500 mt-2 ml-12">
+                Live market sectors color-coded by daily % change · Sized by market cap · R-Factor highlights intraday outperformers
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="w-fit border-indigo-500/30 bg-indigo-500/10 text-indigo-400 text-xs px-2.5 py-1">
-                <Eye className="h-3 w-3 mr-1" />
-                {selectedSymbol}
+              <Badge variant="outline" className="border-orange-500/30 bg-orange-500/10 text-orange-500 dark:text-orange-400 text-xs px-2.5 py-1">
+                <Grid3X3 className="h-3 w-3 mr-1" />
+                NSE India
               </Badge>
             </div>
           </div>
 
-          {/* Tab Switcher */}
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "portfolio" | "paper")} className="w-auto">
-            <TabsList className="h-10 bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.06] rounded-xl p-1 gap-1">
-              <TabsTrigger
-                value="portfolio"
-                className="text-sm h-8 px-4 rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-white/[0.08] data-[state=active]:text-zinc-900 dark:data-[state=active]:text-white text-zinc-500 gap-2"
-              >
-                <Briefcase className="h-4 w-4" />
-                Portfolio
-              </TabsTrigger>
-              <TabsTrigger
-                value="paper"
-                className="text-sm h-8 px-4 rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-white/[0.08] data-[state=active]:text-zinc-900 dark:data-[state=active]:text-white text-zinc-500 gap-2"
-              >
-                <Zap className="h-4 w-4" />
-                Paper Trading
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {/* ── Portfolio Tab ── */}
-          {activeTab === "portfolio" && (
-            <PortfolioTracker userId={user.id} onSelectSymbol={setSelectedSymbol} />
-          )}
-
-          {/* ── Paper Trading Tab ── */}
-          {activeTab === "paper" && (
-            <div className="space-y-6">
-              {/* Mini Chart for context */}
-              <Card className="overflow-hidden border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] backdrop-blur-xl">
-                <CardHeader className="pb-3 px-5 pt-5">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/10 ring-1 ring-indigo-500/20">
-                      <BarChart3 className="h-4 w-4 text-indigo-400" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base font-semibold text-zinc-900 dark:text-white">{selectedSymbol}</CardTitle>
-                      <p className="text-[11px] text-zinc-600 mt-0.5">Live chart · Use Buy/Sell below to paper trade</p>
-                    </div>
-                  </div>
-                </CardHeader>
-                <Separator className="bg-zinc-200 dark:bg-white/[0.04]" />
-                <CardContent className="p-4">
-                  <ChartUI symbol={selectedSymbol} />
-                </CardContent>
-              </Card>
-
-              {/* Paper Trading Controls & History */}
-              <PaperTrading userId={user.id} selectedSymbol={selectedSymbol} />
-            </div>
-          )}
+          {/* Heatmap Component */}
+          <SectorHeatmap />
         </div>
       </main>
 
-      {/* Sonner Toaster for trade notifications */}
       <Toaster
         position="bottom-right"
         toastOptions={{

@@ -72,15 +72,15 @@ export function StockInfo({ symbol }: StockInfoProps) {
 
     if (loading) {
         return (
-            <div className="h-16 border-b border-gray-800 flex items-center justify-center">
-                <div className="animate-pulse h-4 w-40 bg-gray-700 rounded"></div>
+            <div className="h-16 border-b border-zinc-200 dark:border-gray-800 flex items-center justify-center">
+                <div className="animate-pulse h-4 w-40 bg-zinc-200 dark:bg-gray-700 rounded"></div>
             </div>
         );
     }
 
     if (error || !stockData) {
         return (
-            <div className="h-16 border-b border-gray-800 flex items-center px-4">
+            <div className="h-16 border-b border-zinc-200 dark:border-gray-800 flex items-center px-4">
                 <p className="text-red-500 text-sm">{error || "Failed to load stock data"}</p>
             </div>
         );
@@ -89,11 +89,11 @@ export function StockInfo({ symbol }: StockInfoProps) {
     const isPositive = stockData.change >= 0;
 
     return (
-        <div className="h-16 border-b border-gray-800 flex items-center justify-between px-4">
+        <div className="h-16 border-b border-zinc-200 dark:border-gray-800 flex items-center justify-between px-4">
             <div className="flex items-center gap-4">
                 <div>
                     <h2 className="font-bold text-lg">{stockData.name}</h2>
-                    <div className="text-xs text-gray-400">{stockData.symbol} • {stockData.exchange}</div>
+                    <div className="text-xs text-zinc-400 dark:text-gray-400">{stockData.symbol} • {stockData.exchange}</div>
                 </div>
 
                 <div className="flex items-center">
@@ -114,24 +114,24 @@ export function StockInfo({ symbol }: StockInfoProps) {
 
             <div className="hidden md:flex items-center gap-6 text-xs">
                 <div>
-                    <div className="text-gray-400">Open</div>
+                    <div className="text-zinc-400 dark:text-gray-400">Open</div>
                     <div>₹{stockData.open.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 </div>
                 <div>
-                    <div className="text-gray-400">High</div>
+                    <div className="text-zinc-400 dark:text-gray-400">High</div>
                     <div>₹{stockData.high.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 </div>
                 <div>
-                    <div className="text-gray-400">Low</div>
+                    <div className="text-zinc-400 dark:text-gray-400">Low</div>
                     <div>₹{stockData.low.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                 </div>
                 <div>
-                    <div className="text-gray-400">Volume</div>
+                    <div className="text-zinc-400 dark:text-gray-400">Volume</div>
                     <div>{stockData.volume.toLocaleString()}</div>
                 </div>
                 {stockData.marketCap && (
                     <div>
-                        <div className="text-gray-400">Market Cap</div>
+                        <div className="text-zinc-400 dark:text-gray-400">Market Cap</div>
                         <div>₹{(stockData.marketCap / 10000000).toFixed(2)} Cr</div>
                     </div>
                 )}

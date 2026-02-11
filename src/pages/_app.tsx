@@ -1,15 +1,11 @@
 import { AppProps } from 'next/app';
 import { ClerkProvider } from '@clerk/nextjs';
+import { ThemeProvider } from '@/components/theme-provider';
 import '../app/globals.css';
 
 // Get the publishable key from the environment variable
 // This needs to be a constant at build time for proper deployment
 const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "";
-
-// Log for debugging
-if (typeof window !== 'undefined') {
-  console.log("Clerk publishable key in _app.tsx:", publishableKey);
-}
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -23,7 +19,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }}
     >
-      <Component {...pageProps} />
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </ClerkProvider>
   );
 }

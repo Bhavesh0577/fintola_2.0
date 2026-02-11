@@ -235,8 +235,8 @@ export function PortfolioTracker({
   if (loading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-40 w-full rounded-xl bg-white/[0.04]" />
-        <Skeleton className="h-60 w-full rounded-xl bg-white/[0.04]" />
+        <Skeleton className="h-40 w-full rounded-xl bg-zinc-100 dark:bg-white/[0.04]" />
+        <Skeleton className="h-60 w-full rounded-xl bg-zinc-100 dark:bg-white/[0.04]" />
       </div>
     )
   }
@@ -245,25 +245,25 @@ export function PortfolioTracker({
     <div className="space-y-5">
       {/* ── Summary Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-xl">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] backdrop-blur-xl">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
               <Wallet className="h-4 w-4 text-indigo-400" />
               <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium">Total Invested</p>
             </div>
-            <p className="text-xl font-bold text-white">₹{totalInvested.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</p>
+            <p className="text-xl font-bold text-zinc-900 dark:text-white">₹{totalInvested.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</p>
           </CardContent>
         </Card>
 
-        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-xl">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] backdrop-blur-xl">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
               <Briefcase className="h-4 w-4 text-emerald-400" />
               <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium">Market Value</p>
             </div>
-            <p className="text-xl font-bold text-white">
+            <p className="text-xl font-bold text-zinc-900 dark:text-white">
               {pricesLoading ? (
-                <Skeleton className="h-6 w-28 rounded bg-white/[0.06]" />
+                <Skeleton className="h-6 w-28 rounded bg-zinc-200 dark:bg-white/[0.06]" />
               ) : (
                 `₹${totalValue.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`
               )}
@@ -271,7 +271,7 @@ export function PortfolioTracker({
           </CardContent>
         </Card>
 
-        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-xl">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] backdrop-blur-xl">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
               {totalPnl >= 0 ? (
@@ -284,7 +284,7 @@ export function PortfolioTracker({
             <div className="flex items-baseline gap-2">
               <p className={`text-xl font-bold ${totalPnl >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
                 {pricesLoading ? (
-                  <Skeleton className="h-6 w-28 rounded bg-white/[0.06]" />
+                  <Skeleton className="h-6 w-28 rounded bg-zinc-200 dark:bg-white/[0.06]" />
                 ) : (
                   `${totalPnl >= 0 ? "+" : ""}₹${totalPnl.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`
                 )}
@@ -301,9 +301,9 @@ export function PortfolioTracker({
 
       {/* ── Portfolio Value Chart ── */}
       {chartData.length > 1 && (
-        <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-xl overflow-hidden">
+        <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] backdrop-blur-xl overflow-hidden">
           <CardHeader className="pb-2 px-5 pt-4">
-            <CardTitle className="text-sm font-semibold text-zinc-300 flex items-center gap-2">
+            <CardTitle className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
               <PieChart className="h-4 w-4 text-indigo-400" />
               Portfolio Value Over Time
             </CardTitle>
@@ -349,13 +349,13 @@ export function PortfolioTracker({
       )}
 
       {/* ── Holdings Table ── */}
-      <Card className="border-white/[0.06] bg-white/[0.02] backdrop-blur-xl overflow-hidden">
+      <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] backdrop-blur-xl overflow-hidden">
         <CardHeader className="px-5 pt-4 pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-semibold text-zinc-300 flex items-center gap-2">
+            <CardTitle className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
               <Briefcase className="h-4 w-4 text-indigo-400" />
               Your Holdings
-              <Badge variant="outline" className="border-white/[0.06] text-zinc-500 text-[10px] ml-1">
+              <Badge variant="outline" className="border-zinc-200 dark:border-white/[0.06] text-zinc-500 text-[10px] ml-1">
                 {holdings.length}
               </Badge>
             </CardTitle>
@@ -363,7 +363,7 @@ export function PortfolioTracker({
               <button
                 onClick={() => fetchLivePrices(holdings)}
                 disabled={pricesLoading}
-                className="flex h-8 items-center gap-1.5 rounded-lg px-3 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all disabled:opacity-40"
+                className="flex h-8 items-center gap-1.5 rounded-lg px-3 text-xs font-medium text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-white/[0.06] transition-all disabled:opacity-40"
               >
                 <RefreshCw className={`h-3.5 w-3.5 ${pricesLoading ? "animate-spin" : ""}`} />
                 Refresh
@@ -378,7 +378,7 @@ export function PortfolioTracker({
             </div>
           </div>
         </CardHeader>
-        <Separator className="bg-white/[0.04]" />
+        <Separator className="bg-zinc-100 dark:bg-white/[0.04]" />
 
         {holdings.length === 0 ? (
           <CardContent className="py-12 text-center">
@@ -397,7 +397,7 @@ export function PortfolioTracker({
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/[0.04]">
+                <tr className="border-b border-zinc-100 dark:border-white/[0.04]">
                   <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Symbol</th>
                   <th className="px-3 py-3 text-right text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Qty</th>
                   <th className="px-3 py-3 text-right text-[10px] font-semibold uppercase tracking-widest text-zinc-600">Buy Price</th>
@@ -418,12 +418,12 @@ export function PortfolioTracker({
                   return (
                     <tr
                       key={h.id}
-                      className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors group"
+                      className="border-b border-zinc-100 dark:border-white/[0.03] hover:bg-zinc-100 dark:hover:bg-white/[0.02] transition-colors group"
                     >
                       <td className="px-5 py-3">
                         <button
                           onClick={() => onSelectSymbol(h.symbol)}
-                          className="text-sm font-semibold text-zinc-200 hover:text-indigo-400 transition-colors"
+                          className="text-sm font-semibold text-zinc-700 dark:text-zinc-200 hover:text-indigo-400 transition-colors"
                         >
                           {h.symbol}
                         </button>
@@ -431,19 +431,19 @@ export function PortfolioTracker({
                       </td>
                       <td className="px-3 py-3 text-right text-sm text-zinc-400">{h.quantity}</td>
                       <td className="px-3 py-3 text-right text-sm text-zinc-400">₹{h.buy_price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</td>
-                      <td className="px-3 py-3 text-right text-sm text-zinc-300">
+                      <td className="px-3 py-3 text-right text-sm text-zinc-700 dark:text-zinc-300">
                         {h.current_price !== undefined ? (
                           `₹${h.current_price.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`
                         ) : (
-                          <Skeleton className="h-4 w-16 rounded bg-white/[0.06] ml-auto" />
+                          <Skeleton className="h-4 w-16 rounded bg-zinc-200 dark:bg-white/[0.06] ml-auto" />
                         )}
                       </td>
                       <td className="px-3 py-3 text-right text-sm text-zinc-400">₹{invested.toLocaleString("en-IN", { maximumFractionDigits: 0 })}</td>
-                      <td className="px-3 py-3 text-right text-sm text-zinc-300">
+                      <td className="px-3 py-3 text-right text-sm text-zinc-700 dark:text-zinc-300">
                         {h.market_value !== undefined ? (
                           `₹${h.market_value.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`
                         ) : (
-                          <Skeleton className="h-4 w-16 rounded bg-white/[0.06] ml-auto" />
+                          <Skeleton className="h-4 w-16 rounded bg-zinc-200 dark:bg-white/[0.06] ml-auto" />
                         )}
                       </td>
                       <td className="px-3 py-3 text-right">
@@ -457,7 +457,7 @@ export function PortfolioTracker({
                             </span>
                           </div>
                         ) : (
-                          <Skeleton className="h-4 w-16 rounded bg-white/[0.06] ml-auto" />
+                          <Skeleton className="h-4 w-16 rounded bg-zinc-200 dark:bg-white/[0.06] ml-auto" />
                         )}
                       </td>
                       <td className="px-5 py-3 text-right">
@@ -480,9 +480,9 @@ export function PortfolioTracker({
 
       {/* ── Add Holding Dialog ── */}
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
-        <DialogContent className="bg-[#111113] border-white/[0.08] text-white sm:rounded-2xl max-w-[420px] [&>button]:text-zinc-500">
+        <DialogContent className="bg-white dark:bg-[#111113] border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-white sm:rounded-2xl max-w-[420px] [&>button]:text-zinc-500">
           <DialogHeader>
-            <DialogTitle className="text-lg font-semibold text-white flex items-center gap-2">
+            <DialogTitle className="text-lg font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
               <Plus className="h-5 w-5 text-indigo-400" />
               Add Holding
             </DialogTitle>
@@ -498,7 +498,7 @@ export function PortfolioTracker({
                 value={formSymbol}
                 onChange={(e) => setFormSymbol(e.target.value)}
                 placeholder="e.g. RELIANCE.NS, BTC-USD"
-                className="w-full h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                className="w-full h-10 rounded-lg bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.06] px-3 text-sm text-zinc-700 dark:text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -513,7 +513,7 @@ export function PortfolioTracker({
                   placeholder="10"
                   min="0"
                   step="any"
-                  className="w-full h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                  className="w-full h-10 rounded-lg bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.06] px-3 text-sm text-zinc-700 dark:text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                 />
               </div>
               <div>
@@ -527,7 +527,7 @@ export function PortfolioTracker({
                   placeholder="2450.00"
                   min="0"
                   step="any"
-                  className="w-full h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                  className="w-full h-10 rounded-lg bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.06] px-3 text-sm text-zinc-700 dark:text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                 />
               </div>
             </div>
@@ -540,14 +540,14 @@ export function PortfolioTracker({
                 value={formNotes}
                 onChange={(e) => setFormNotes(e.target.value)}
                 placeholder="e.g. Long-term hold, earnings play"
-                className="w-full h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                className="w-full h-10 rounded-lg bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.06] px-3 text-sm text-zinc-700 dark:text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
               />
             </div>
           </div>
 
           <DialogFooter className="gap-2 sm:gap-2">
             <DialogClose asChild>
-              <button className="h-9 px-4 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+              <button className="h-9 px-4 rounded-lg text-sm font-medium text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-white/[0.06] transition-all">
                 Cancel
               </button>
             </DialogClose>

@@ -93,28 +93,35 @@ export function TradingViewChart({ symbol, timeframe }: TradingViewChartProps) {
     useEffect(() => {
         if (!chartContainerRef.current) return;
 
-        // Create the chart with a dark theme
+        // Detect theme
+        const isDark = document.documentElement.classList.contains("dark");
+        const bgColor = isDark ? '#131722' : '#ffffff';
+        const textColor = isDark ? '#d1d4dc' : '#3c4043';
+        const gridColor = isDark ? '#1e222d' : '#e0e3eb';
+        const borderColor = isDark ? '#1e222d' : '#e0e3eb';
+
+        // Create the chart with theme-aware colors
         const chart = createChart(chartContainerRef.current, {
             width: chartContainerRef.current.offsetWidth,
             height: chartContainerRef.current.offsetHeight,
             layout: {
-                background: { color: '#131722' },
-                textColor: '#d1d4dc',
+                background: { color: bgColor },
+                textColor: textColor,
             },
             grid: {
-                vertLines: { color: '#1e222d' },
-                horzLines: { color: '#1e222d' },
+                vertLines: { color: gridColor },
+                horzLines: { color: gridColor },
             },
             crosshair: { mode: 1 },
             rightPriceScale: {
-                borderColor: '#1e222d',
+                borderColor: borderColor,
                 scaleMargins: {
                     top: 0.1,
                     bottom: 0.3,
                 },
             },
             timeScale: {
-                borderColor: '#1e222d',
+                borderColor: borderColor,
                 timeVisible: true,
                 secondsVisible: false,
             },
@@ -166,20 +173,20 @@ export function TradingViewChart({ symbol, timeframe }: TradingViewChartProps) {
         // Initial data fetch
         fetchSymbolData(symbol);
 
-        // Handle responsive resizing
-        const handleResize = () => {
-            if (chartContainerRef.current && chartRef.current) {
-                chartRef.current.applyOptions({
-                    width: chartContainerRef.current.offsetWidth,
-                    height: chartContainerRef.current.offsetHeight
-                });
+        // Handle responsive resizing with ResizeObserver
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const { width, height } = entry.contentRect;
+                if (width > 0 && height > 0 && chartRef.current) {
+                    chartRef.current.applyOptions({ width, height });
+                }
             }
-        };
-        window.addEventListener("resize", handleResize);
+        });
+        resizeObserver.observe(chartContainerRef.current);
 
         // Cleanup on component unmount
         return () => {
-            window.removeEventListener("resize", handleResize);
+            resizeObserver.disconnect();
             chartRef.current?.remove();
         };
     }, []);
@@ -214,7 +221,7 @@ export function TradingViewChart({ symbol, timeframe }: TradingViewChartProps) {
             )}
 
             {error && (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#131722]/80 z-10">
+                <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-[#131722]/80 z-10">
                     <div className="bg-red-500/20 border border-red-500 rounded-md p-4 max-w-md">
                         <p className="text-red-500">{error}</p>
                     </div>
@@ -226,7 +233,7 @@ export function TradingViewChart({ symbol, timeframe }: TradingViewChartProps) {
                 className="w-full h-full"
             />
 
-            <div className="absolute bottom-4 right-4 flex gap-2 bg-[#131722]/80 p-2 rounded text-xs">
+            <div className="absolute bottom-4 right-4 flex gap-2 bg-white/80 dark:bg-[#131722]/80 p-2 rounded text-xs">
                 <div className="flex items-center gap-1">
                     <div className="w-3 h-0.5 bg-[#2962FF]"></div>
                     <span>SMA(20)</span>

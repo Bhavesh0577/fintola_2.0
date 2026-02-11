@@ -9,7 +9,7 @@ app = FastAPI(title="Fintola Finance API")
 # Enable CORS for Next.js frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -89,16 +89,19 @@ async def get_quote(symbol: str = "RELIANCE.NS"):
 
 
 @app.get("/api/chart")
-async def get_chart(symbol: str = "RELIANCE.NS", period: str = "1y", interval: str = "1h"):
+async def get_chart(symbol: str = "RELIANCE.NS", period: str = "1y", interval: str = "1h", start: str = None, end: str = None):
     """Get historical chart data for a symbol"""
-    cache_key = f"chart_{symbol}_{period}_{interval}"
+    cache_key = f"chart_{symbol}_{period}_{interval}_{start}_{end}"
     cached = get_cached(cache_key, CACHE_TTL_CHART)
     if cached:
         return cached
 
     try:
         ticker = yf.Ticker(symbol)
-        hist = ticker.history(period=period, interval=interval)
+        if start:
+            hist = ticker.history(start=start, end=end, interval=interval)
+        else:
+            hist = ticker.history(period=period, interval=interval)
         
         if len(hist) == 0:
             return {"error": f"No data found for {symbol}"}
@@ -141,12 +144,12 @@ async def get_chart(symbol: str = "RELIANCE.NS", period: str = "1y", interval: s
 
 
 @app.get("/api/finance")
-async def get_finance(symbol: str = "RELIANCE.NS", type: str = "chart"):
+async def get_finance(symbol: str = "RELIANCE.NS", type: str = "chart", start: str = None, end: str = None):
     """Combined endpoint - use type=quote for current price, type=chart for historical"""
     if type == "quote":
         return await get_quote(symbol)
     else:
-        return await get_chart(symbol)
+        return await get_chart(symbol, start=start, end=end)
 
 
 CACHE_TTL_NEWS = 600  # 10 minutes for news
@@ -239,8 +242,6 @@ async def get_news(symbol: str = "RELIANCE.NS"):
     except Exception as e:
         return {"error": str(e), "symbol": symbol, "articles": []}
 
-
-# ─── Helpers for DataFrames ─────────────────────────────────────
 import math
 import numpy as np
 
@@ -577,6 +578,200 @@ async def get_screener(screen: str = "most_actives"):
 
     except Exception as e:
         return {"error": str(e), "screen": screen, "items": []}
+
+
+# ─── /api/nse-heatmap ───────────────────────────────────────────
+# Separate endpoint using nsetools (direct NSE API).
+# Single call nse.get_stock_quote_in_index() returns ALL stocks in an index
+# with live prices, % change, volume — no per-ticker bottleneck.
+# Keeps the existing /api/heatmap (yfinance) completely untouched.
+# ─────────────────────────────────────────────────────────────────
+
+CACHE_TTL_NSE_HEATMAP = 60  # 60s
+
+# Sector grouping for NIFTY 50 stocks (nsetools returns flat list, we group manually)
+_NIFTY50_SECTOR = {
+    "HDFCBANK": "Financial Services", "ICICIBANK": "Financial Services",
+    "KOTAKBANK": "Financial Services", "SBIN": "Financial Services",
+    "AXISBANK": "Financial Services", "BAJFINANCE": "Financial Services",
+    "BAJAJFINSV": "Financial Services", "HDFCLIFE": "Financial Services",
+    "SBILIFE": "Financial Services", "INDUSINDBK": "Financial Services",
+    "SHRIRAMFIN": "Financial Services", "JIOFINANCE": "Financial Services",
+    "TCS": "IT", "INFY": "IT", "HCLTECH": "IT", "WIPRO": "IT",
+    "TECHM": "IT", "LTIM": "IT",
+    "RELIANCE": "Energy", "ONGC": "Energy", "NTPC": "Energy",
+    "POWERGRID": "Energy", "ADANIENSOL": "Energy", "BPCL": "Energy",
+    "TATAPOWER": "Energy",
+    "TATAMOTORS": "Automobile", "M&M": "Automobile", "MARUTI": "Automobile",
+    "BAJAJ-AUTO": "Automobile", "EICHERMOT": "Automobile", "HEROMOTOCO": "Automobile",
+    "HINDUNILVR": "FMCG", "ITC": "FMCG", "NESTLEIND": "FMCG",
+    "BRITANNIA": "FMCG", "TATACONSUM": "FMCG", "GODREJCP": "FMCG",
+    "TATASTEEL": "Metals & Mining", "JSWSTEEL": "Metals & Mining",
+    "HINDALCO": "Metals & Mining", "ADANIENT": "Metals & Mining",
+    "COALINDIA": "Metals & Mining",
+    "SUNPHARMA": "Pharma & Healthcare", "DRREDDY": "Pharma & Healthcare",
+    "DIVISLAB": "Pharma & Healthcare", "CIPLA": "Pharma & Healthcare",
+    "APOLLOHOSP": "Pharma & Healthcare",
+    "ULTRACEMCO": "Construction & Infra", "GRASIM": "Construction & Infra",
+    "ADANIPORTS": "Construction & Infra", "LT": "Construction & Infra",
+    "BHARTIARTL": "Telecom & Media",
+    "TITAN": "Consumer Durables", "ASIANPAINT": "Consumer Durables",
+    "BEL": "Defence & PSU", "HAL": "Defence & PSU",
+    "TRENT": "Retail",
+}
+
+_SECTOR_SUB = {
+    "NIFTY BANK": {
+        "HDFCBANK": "Private Banks", "ICICIBANK": "Private Banks",
+        "KOTAKBANK": "Private Banks", "AXISBANK": "Private Banks",
+        "INDUSINDBK": "Private Banks", "BANDHANBNK": "Private Banks",
+        "FEDERALBNK": "Private Banks", "IDFCFIRSTB": "Private Banks",
+        "AUBANK": "Private Banks", "YESBANK": "Private Banks",
+        "SBIN": "PSU Banks", "BANKBARODA": "PSU Banks",
+        "PNB": "PSU Banks", "CANBK": "PSU Banks",
+    },
+    "NIFTY IT": {
+        "TCS": "Large Cap", "INFY": "Large Cap", "HCLTECH": "Large Cap",
+        "WIPRO": "Large Cap", "TECHM": "Large Cap",
+        "LTIM": "Mid Cap", "MPHASIS": "Mid Cap", "COFORGE": "Mid Cap",
+        "PERSISTENT": "Mid Cap", "LTTS": "Mid Cap",
+    },
+    "NIFTY PHARMA": {
+        "SUNPHARMA": "Large Cap", "DRREDDY": "Large Cap",
+        "CIPLA": "Large Cap", "DIVISLAB": "Large Cap", "AUROPHARMA": "Large Cap",
+        "LUPIN": "Mid Cap", "BIOCON": "Mid Cap",
+        "TORNTPHARM": "Mid Cap", "ALKEM": "Mid Cap", "IPCALAB": "Mid Cap",
+    },
+}
+
+_NSE_ALLOWED = [
+    "NIFTY 50", "NIFTY BANK", "NIFTY IT", "NIFTY PHARMA",
+    "NIFTY AUTO", "NIFTY FMCG", "NIFTY ENERGY",
+    "NIFTY METAL", "NIFTY REALTY",
+]
+
+
+def _nse_sector(sym: str, idx: str) -> str:
+    if idx == "NIFTY 50":
+        return _NIFTY50_SECTOR.get(sym, "Other")
+    return _SECTOR_SUB.get(idx, {}).get(sym, idx.replace("NIFTY ", ""))
+
+
+def _fetch_nse_index(index: str):
+    """Blocking helper — runs in threadpool via FastAPI."""
+    import os, sys, io
+    from nsetools import Nse
+
+    # Suppress nsetools Unicode print on Windows
+    _orig_out, _orig_err = sys.stdout, sys.stderr
+    try:
+        if os.name == "nt":
+            sys.stdout = io.StringIO()
+            sys.stderr = io.StringIO()
+        nse = Nse()
+        return nse.get_stock_quote_in_index(index=index, include_index=True)
+    finally:
+        sys.stdout, sys.stderr = _orig_out, _orig_err
+
+
+@app.get("/api/nse-heatmap")
+def get_nse_heatmap(index: str = "NIFTY 50"):
+    """
+    Sector heatmap using nsetools — direct NSE data.
+    Uses `def` (not async) so FastAPI runs it in a threadpool,
+    preventing the blocking nsetools HTTP call from freezing the event loop.
+    """
+    cache_key = f"nse_heatmap_{index}"
+    cached = get_cached(cache_key, CACHE_TTL_NSE_HEATMAP)
+    if cached:
+        return cached
+
+    if index not in _NSE_ALLOWED:
+        return {"error": f"Unknown index '{index}'. Available: {_NSE_ALLOWED}"}
+
+    try:
+        raw = _fetch_nse_index(index)
+
+        if not raw or not isinstance(raw, list) or len(raw) < 2:
+            return {"error": "NSE returned empty data. Market may be closed.", "index": index}
+
+        # Separate index quote from stock quotes
+        index_quote = None
+        stock_quotes = []
+        for item in raw:
+            sym = item.get("symbol", "")
+            if item.get("priority") == 1 or sym == index or sym.startswith("NIFTY"):
+                index_quote = item
+            else:
+                stock_quotes.append(item)
+
+        # Index-level % change for R-factor baseline
+        idx_pchange = 0.0
+        if index_quote:
+            idx_pchange = float(index_quote.get("pChange", 0) or 0)
+        if idx_pchange == 0 and stock_quotes:
+            idx_pchange = sum(float(q.get("pChange", 0) or 0) for q in stock_quotes) / len(stock_quotes)
+
+        # Group by sector
+        buckets: dict = {}
+        for q in stock_quotes:
+            sym = q.get("symbol", "")
+            if not sym:
+                continue
+
+            pchange = float(q.get("pChange", 0) or 0)
+            last_price = float(q.get("lastPrice", 0) or 0)
+            volume = int(q.get("totalTradedVolume", 0) or 0)
+            traded_val = float(q.get("totalTradedValue", 0) or 0)
+
+            # Use traded value as size proxy (correlates with market cap)
+            size = max(int(traded_val), int(volume * last_price), 1_000_000)
+
+            r_factor = round(pchange / idx_pchange, 2) if idx_pchange != 0 else 0
+
+            sector = _nse_sector(sym, index)
+            if sector not in buckets:
+                buckets[sector] = []
+
+            buckets[sector].append({
+                "name": sym,
+                "shortName": sym,
+                "size": size,
+                "change": round(pchange, 2),
+                "lastPrice": round(last_price, 2),
+                "volume": volume,
+                "rFactor": r_factor,
+                "marketCap": size,
+            })
+
+        # Build nested sectors
+        sectors = []
+        for name, children in buckets.items():
+            if not children:
+                continue
+            avg = round(sum(c["change"] for c in children) / len(children), 2)
+            sectors.append({
+                "name": name,
+                "change": avg,
+                "children": sorted(children, key=lambda x: x["size"], reverse=True),
+            })
+
+        result = {
+            "index": index,
+            "indexChange": round(idx_pchange, 2),
+            "sectors": sorted(sectors, key=lambda s: sum(c["size"] for c in s["children"]), reverse=True),
+            "totalStocks": sum(len(s["children"]) for s in sectors),
+            "timestamp": datetime.now().isoformat(),
+            "availableIndices": _NSE_ALLOWED,
+            "source": "nsetools",
+        }
+        set_cache(cache_key, result)
+        return result
+
+    except ImportError:
+        return {"error": "nsetools not installed. Run: pip install nsetools==2.0.1", "index": index}
+    except Exception as e:
+        return {"error": str(e), "index": index}
 
 
 if __name__ == "__main__":
