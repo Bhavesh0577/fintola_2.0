@@ -33,14 +33,14 @@ export function ChartUI({ symbol, title }: ChartUIProps) {
                 <h3 className="text-lg font-medium mb-4">{title}</h3>
             )}
 
-            <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
-                <div className="flex justify-between items-center mb-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-3 sm:p-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
                     <div>
                         <span className="text-sm text-zinc-500 dark:text-gray-400">Symbol:</span>
                         <span className="ml-2 font-semibold">{symbol}</span>
                     </div>
 
-                    <div className="text-sm text-zinc-500 dark:text-gray-400">
+                    <div className="text-xs sm:text-sm text-zinc-500 dark:text-gray-400">
                         Last updated: {currentDateTime}
                     </div>
                 </div>
@@ -121,19 +121,22 @@ export default function TradePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-100 to-white dark:from-black dark:to-gray-900 text-zinc-900 dark:text-white p-8">
+    <div className="min-h-screen bg-gradient-to-b from-zinc-100 to-white dark:from-black dark:to-gray-900 text-zinc-900 dark:text-white p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="bg-purple-500/10 p-2 rounded-lg">
-            <TrendingUp className="h-6 w-6 text-purple-500" />
+        <div className="flex items-center gap-3 mb-4 sm:mb-8">
+          <button onClick={() => router.back()} className="sm:hidden flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-800 shrink-0">
+            <span className="text-xs">←</span>
+          </button>
+          <div className="bg-purple-500/10 p-1.5 sm:p-2 rounded-lg">
+            <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-purple-500" />
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-xl sm:text-3xl font-bold bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
             Trading Dashboard
           </h1>
         </div>
 
-        <div className="bg-gradient-to-r from-zinc-200 to-zinc-100 dark:from-gray-900 dark:to-gray-800 rounded-xl p-[1px] mb-8 shadow-lg">
-          <div className="bg-white/95 dark:bg-gray-900/95 rounded-xl p-4 flex gap-2">
+        <div className="bg-gradient-to-r from-zinc-200 to-zinc-100 dark:from-gray-900 dark:to-gray-800 rounded-xl p-[1px] mb-4 sm:mb-8 shadow-lg">
+          <div className="bg-white/95 dark:bg-gray-900/95 rounded-xl p-3 sm:p-4 flex gap-2">
             <Input
               placeholder="Search stock or crypto"
               className="bg-zinc-100/50 dark:bg-gray-800/50 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-gray-500 border-zinc-300 dark:border-gray-700 focus:border-purple-500 transition-colors"

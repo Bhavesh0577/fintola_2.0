@@ -565,8 +565,8 @@ export default function Page() {
       {/* ─── MAIN ─── */}
       <main className="flex-1 overflow-y-auto">
         {/* Top Bar */}
-        <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-zinc-200 dark:border-white/[0.04] bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-2xl px-6">
-          <div className="flex items-center gap-4">
+        <header className="sticky top-0 z-50 flex h-14 sm:h-16 items-center justify-between border-b border-zinc-200 dark:border-white/[0.04] bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-2xl px-3 sm:px-6">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Mobile nav drawer */}
             <MobileNav
               activeNav={activeNav}
@@ -575,6 +575,7 @@ export default function Page() {
                 else if (target === "intraday") window.location.href = "https://www.tradingview.com/chart/8daX0FdT/"
                 else if (target === "portfolio") router.push("/portfolio")
                 else if (target === "research") router.push("/research")
+                else if (target === "heatmap") router.push("/heatmap")
                 else if (target === "settings") router.push("/profile")
                 else setActiveNav(target)
               }}
@@ -583,10 +584,10 @@ export default function Page() {
             <button
               title="Search (Ctrl+K)"
               onClick={() => setCmdOpen(true)}
-              className="flex items-center gap-3 h-9 w-[240px] md:w-[320px] px-3 text-sm bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06] text-zinc-500 rounded-xl hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:border-zinc-300 dark:hover:border-white/[0.1] transition-all"
+              className="flex items-center gap-2 sm:gap-3 h-9 w-[160px] sm:w-[240px] md:w-[320px] px-3 text-sm bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06] text-zinc-500 rounded-xl hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:border-zinc-300 dark:hover:border-white/[0.1] transition-all"
             >
               <Search className="h-4 w-4 text-zinc-400 dark:text-zinc-600" />
-              <span className="flex-1 text-left text-zinc-400 dark:text-zinc-600 text-sm">Search stocks, crypto…</span>
+              <span className="flex-1 text-left text-zinc-400 dark:text-zinc-600 text-xs sm:text-sm truncate">Search stocks, crypto…</span>
               <kbd className="hidden sm:inline-flex h-5 items-center gap-0.5 rounded border border-zinc-200 dark:border-white/[0.08] bg-zinc-50 dark:bg-white/[0.04] px-1.5 font-mono text-[10px] font-medium text-zinc-400 dark:text-zinc-500">
                 ⌘K
               </kbd>
@@ -618,11 +619,11 @@ export default function Page() {
         </header>
 
         {/* Content */}
-        <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
+        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 max-w-[1600px] mx-auto">
           {/* Greeting */}
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                 {greeting}, {user.firstName || user.username || "Trader"}
               </h1>
               <p className="text-sm text-zinc-500 mt-1">Here&apos;s what&apos;s happening in the markets today.</p>

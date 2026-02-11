@@ -124,7 +124,7 @@ export function ScreenerPanel({ onSelectSymbol }: { onSelectSymbol?: (sym: strin
         <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
           <CardContent className="p-0">
             <div className="w-full max-h-[70vh] overflow-auto">
-              <Table>
+              <Table className="min-w-[700px]">
                 <TableHeader>
                   <TableRow className="border-zinc-200 dark:border-white/[0.06] hover:bg-transparent">
                     <TableHead className="text-zinc-500 text-xs">#</TableHead>

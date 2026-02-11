@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ScrollArea } from "@/components/ui/scroll-area"
+
 import {
   Table,
   TableBody,
@@ -165,8 +165,8 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <ScrollArea className="w-full">
-              <Table>
+            <div className="w-full overflow-x-auto">
+              <Table className="min-w-[500px]">
                 <TableHeader>
                   <TableRow className="border-zinc-200 dark:border-white/[0.06] hover:bg-transparent">
                     <TableHead className="text-zinc-500 text-xs">Date</TableHead>
@@ -222,7 +222,7 @@ export function CalendarPanel({ symbol }: { symbol: string }) {
                   })}
                 </TableBody>
               </Table>
-            </ScrollArea>
+            </div>
           </CardContent>
         </Card>
       )}

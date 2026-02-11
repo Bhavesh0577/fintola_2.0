@@ -347,75 +347,80 @@ export function SectorHeatmap() {
   }, [data])
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3 sm:space-y-5">
       {/* ── Sector Selector ── */}
-      <div className="flex flex-wrap items-center gap-2">
-        {SECTOR_INDICES.map((si) => (
-          <button
-            key={si.key}
-            onClick={() => setSelectedIndex(si.key)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
-              selectedIndex === si.key
-                ? "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-500/10"
-                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.06]"
-            }`}
-          >
-            <si.icon className="h-3.5 w-3.5" />
-            {si.label}
-          </button>
-        ))}
+      <div className="overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0 pb-1 scrollbar-hide">
+        <div className="flex items-center gap-1.5 sm:gap-2 sm:flex-wrap min-w-max sm:min-w-0">
+          {SECTOR_INDICES.map((si) => (
+            <button
+              key={si.key}
+              onClick={() => setSelectedIndex(si.key)}
+              className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium rounded-lg transition-all duration-200 whitespace-nowrap ${
+                selectedIndex === si.key
+                  ? "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-500/10"
+                  : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.06]"
+              }`}
+            >
+              <si.icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              {si.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ── Stats Bar ── */}
       {data && !loading && (
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Index change */}
-          <Badge
-            variant="outline"
-            className={`text-xs px-2.5 py-1 ${
-              data.indexChange >= 0
-                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                : "border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400"
-            }`}
-          >
-            {data.indexChange >= 0 ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
-            {selectedIndex} {data.indexChange > 0 ? "+" : ""}{data.indexChange}%
-          </Badge>
+        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-3">
+          {/* Top row: index change + A/D ratio */}
+          <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto scrollbar-hide">
+            {/* Index change */}
+            <Badge
+              variant="outline"
+              className={`text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 shrink-0 ${
+                data.indexChange >= 0
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                  : "border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400"
+              }`}
+            >
+              {data.indexChange >= 0 ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
+              <span className="hidden sm:inline">{selectedIndex} </span>{data.indexChange > 0 ? "+" : ""}{data.indexChange}%
+            </Badge>
 
-          {/* Advance/Decline */}
-          <div className="flex items-center gap-1.5 text-xs">
-            <span className="flex items-center gap-0.5 text-emerald-600 dark:text-emerald-400 font-medium">
-              <ArrowUp className="h-3 w-3" />
-              {stats.gainers}
-            </span>
-            <span className="text-zinc-400">/</span>
-            <span className="flex items-center gap-0.5 text-rose-600 dark:text-rose-400 font-medium">
-              <ArrowDown className="h-3 w-3" />
-              {stats.losers}
-            </span>
-            <span className="text-zinc-400 dark:text-zinc-600 text-[10px]">A/D</span>
+            {/* Advance/Decline */}
+            <div className="flex items-center gap-1.5 text-xs shrink-0">
+              <span className="flex items-center gap-0.5 text-emerald-600 dark:text-emerald-400 font-medium">
+                <ArrowUp className="h-3 w-3" />
+                {stats.gainers}
+              </span>
+              <span className="text-zinc-400">/</span>
+              <span className="flex items-center gap-0.5 text-rose-600 dark:text-rose-400 font-medium">
+                <ArrowDown className="h-3 w-3" />
+                {stats.losers}
+              </span>
+              <span className="text-zinc-400 dark:text-zinc-600 text-[10px]">A/D</span>
+            </div>
+
+            {/* Top gainer */}
+            {stats.topGainer && (
+              <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 shrink-0">
+                🔥 {stats.topGainer.name} +{stats.topGainer.change.toFixed(2)}%
+              </Badge>
+            )}
+
+            {/* Top loser - hide on very small screens */}
+            {stats.topLoser && (
+              <Badge variant="outline" className="hidden xs:inline-flex text-[10px] px-2 py-0.5 border-rose-500/20 bg-rose-500/5 text-rose-600 dark:text-rose-400 shrink-0">
+                📉 {stats.topLoser.name} {stats.topLoser.change.toFixed(2)}%
+              </Badge>
+            )}
+
+            {/* Outperformers - hide on mobile */}
+            {stats.outperformers > 0 && (
+              <Badge variant="outline" className="hidden sm:inline-flex text-[10px] px-2 py-0.5 border-amber-500/20 bg-amber-500/5 text-amber-600 dark:text-amber-400 shrink-0">
+                ⚡ {stats.outperformers} outperformers (R&gt;1.2)
+              </Badge>
+            )}
           </div>
-
-          {/* Top gainer */}
-          {stats.topGainer && (
-            <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-emerald-500/20 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400">
-              🔥 {stats.topGainer.name} +{stats.topGainer.change.toFixed(2)}%
-            </Badge>
-          )}
-
-          {/* Top loser */}
-          {stats.topLoser && (
-            <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-rose-500/20 bg-rose-500/5 text-rose-600 dark:text-rose-400">
-              📉 {stats.topLoser.name} {stats.topLoser.change.toFixed(2)}%
-            </Badge>
-          )}
-
-          {/* Outperformers */}
-          {stats.outperformers > 0 && (
-            <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-amber-500/20 bg-amber-500/5 text-amber-600 dark:text-amber-400">
-              ⚡ {stats.outperformers} outperformers (R&gt;1.2)
-            </Badge>
-          )}
 
           <div className="flex-1" />
 
@@ -437,7 +442,7 @@ export function SectorHeatmap() {
               className="flex items-center gap-1 px-2 py-1 rounded-md text-[10px] text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.04] transition-colors"
             >
               <RefreshCw className="h-3 w-3" />
-              Refresh
+              <span className="hidden sm:inline">Refresh</span>
             </button>
             {lastUpdate && (
               <span className="text-[10px] text-zinc-400 dark:text-zinc-600 flex items-center gap-1">
@@ -453,27 +458,27 @@ export function SectorHeatmap() {
       <Card className="overflow-hidden border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] backdrop-blur-xl">
         <CardContent className="p-0">
           {loading && (
-            <div className="flex items-center justify-center h-[600px]">
+            <div className="flex items-center justify-center h-[350px] sm:h-[500px] md:h-[600px]">
               <div className="flex flex-col items-center gap-3">
-                <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
-                <p className="text-sm text-zinc-500 animate-pulse">
+                <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-indigo-500" />
+                <p className="text-xs sm:text-sm text-zinc-500 animate-pulse">
                   Fetching live data for {selectedIndex}…
                 </p>
                 <p className="text-[10px] text-zinc-400 dark:text-zinc-600">
-                  Bulk downloading {selectedIndex === "NIFTY 50" ? "50+" : "10+"} stocks via yfinance
+                  Downloading {selectedIndex === "NIFTY 50" ? "50+" : "10+"} stocks via NSE
                 </p>
               </div>
             </div>
           )}
 
           {error && !loading && (
-            <div className="flex items-center justify-center h-[600px]">
+            <div className="flex items-center justify-center h-[350px] sm:h-[500px] md:h-[600px]">
               <div className="flex flex-col items-center gap-3 text-center px-6">
-                <div className="h-12 w-12 rounded-full bg-rose-500/10 flex items-center justify-center">
-                  <TrendingDown className="h-6 w-6 text-rose-500" />
+                <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-rose-500/10 flex items-center justify-center">
+                  <TrendingDown className="h-5 w-5 sm:h-6 sm:w-6 text-rose-500" />
                 </div>
-                <p className="text-sm font-medium text-zinc-900 dark:text-white">Failed to load heatmap</p>
-                <p className="text-xs text-zinc-500 max-w-sm">{error}</p>
+                <p className="text-xs sm:text-sm font-medium text-zinc-900 dark:text-white">Failed to load heatmap</p>
+                <p className="text-[11px] sm:text-xs text-zinc-500 max-w-sm">{error}</p>
                 <button
                   onClick={() => fetchHeatmap(true)}
                   className="mt-2 px-4 py-2 text-xs font-medium bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors"
@@ -485,7 +490,7 @@ export function SectorHeatmap() {
           )}
 
           {!loading && !error && treemapData.length > 0 && (
-            <div className="w-full h-[600px] md:h-[650px] lg:h-[700px]">
+            <div className="w-full h-[350px] sm:h-[500px] md:h-[650px] lg:h-[700px]">
               <ResponsiveContainer width="100%" height="100%">
                 <Treemap
                   data={treemapData}
@@ -505,7 +510,7 @@ export function SectorHeatmap() {
       </Card>
 
       {/* ── Legend & R-Factor Info ── */}
-      <div className="flex flex-wrap items-center gap-4 text-[10px] text-zinc-500 dark:text-zinc-500">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-4 text-[10px] text-zinc-500 dark:text-zinc-500">
         {/* Color legend */}
         <div className="flex items-center gap-1.5">
           <span>Color scale:</span>
@@ -519,24 +524,24 @@ export function SectorHeatmap() {
               getHeatColor(2.5),
               getHeatColor(4),
             ].map((c, i) => (
-              <div key={i} className="w-6 h-3" style={{ backgroundColor: c }} />
+              <div key={i} className="w-4 sm:w-6 h-3" style={{ backgroundColor: c }} />
             ))}
           </div>
           <span>-5% → +5%</span>
         </div>
 
-        <Separator orientation="vertical" className="h-4 bg-zinc-200 dark:bg-white/[0.06]" />
+        <Separator orientation="vertical" className="hidden sm:block h-4 bg-zinc-200 dark:bg-white/[0.06]" />
 
         {/* Size legend */}
         <span>Size = Market Cap</span>
 
-        <Separator orientation="vertical" className="h-4 bg-zinc-200 dark:bg-white/[0.06]" />
+        <Separator orientation="vertical" className="hidden sm:block h-4 bg-zinc-200 dark:bg-white/[0.06]" />
 
         {/* R-factor legend */}
         <div className="flex items-center gap-1.5">
-          <Info className="h-3 w-3" />
+          <Info className="h-3 w-3 shrink-0" />
           <span>
-            <strong className="text-zinc-700 dark:text-zinc-300">R-Factor</strong> = Stock % Change ÷ Index % Change · R &gt; 1.2 = outperformer{" "}
+            <strong className="text-zinc-700 dark:text-zinc-300">R-Factor</strong> = Stock % ÷ Index % · R &gt; 1.2 = outperformer{" "}
             <span className="inline-block w-2 h-2 rounded-full border border-amber-400 bg-amber-400/20" />
           </span>
         </div>
@@ -545,15 +550,15 @@ export function SectorHeatmap() {
       {/* ── Sector Breakdown Table ── */}
       {data && !loading && (
         <Card className="border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02]">
-          <CardHeader className="pb-3 px-5 pt-4">
-            <CardTitle className="text-sm font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-indigo-500" />
+          <CardHeader className="pb-2 sm:pb-3 px-3 sm:px-5 pt-3 sm:pt-4">
+            <CardTitle className="text-xs sm:text-sm font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
+              <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-indigo-500" />
               Sector Breakdown
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-5 pb-4">
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs">
+          <CardContent className="px-3 sm:px-5 pb-3 sm:pb-4">
+            <div className="overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
+              <table className="w-full text-[11px] sm:text-xs min-w-[480px] sm:min-w-0">
                 <thead>
                   <tr className="border-b border-zinc-200 dark:border-white/[0.06]">
                     <th className="text-left py-2 text-zinc-500 font-medium">Sector</th>

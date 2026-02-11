@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Table,
   TableBody,
@@ -63,9 +62,9 @@ function formatPct(v: unknown): string {
 function RatioCard({ label, value, fmt = "num" }: { label: string; value: unknown; fmt?: "num" | "pct" | "raw" }) {
   const display = fmt === "pct" ? formatPct(value) : fmt === "raw" ? (value?.toString() ?? "—") : formatNum(value)
   return (
-    <div className="rounded-xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] p-3.5">
-      <p className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
-      <p className="text-lg font-semibold text-zinc-900 dark:text-white tabular-nums">{display}</p>
+    <div className="rounded-xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] p-2.5 sm:p-3.5">
+      <p className="text-[10px] sm:text-[11px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
+      <p className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-white tabular-nums">{display}</p>
     </div>
   )
 }
@@ -122,13 +121,13 @@ function FinancialTable({
   }
 
   return (
-    <ScrollArea className="w-full">
-      <Table>
+    <div className="w-full overflow-x-auto">
+      <Table className="min-w-[600px]">
         <TableHeader>
           <TableRow className="border-zinc-200 dark:border-white/[0.06] hover:bg-transparent">
-            <TableHead className="text-zinc-500 text-xs w-[200px] sticky left-0 bg-white dark:bg-[#09090b] z-10">Metric</TableHead>
+            <TableHead className="text-zinc-500 text-xs w-[140px] sm:w-[200px] sticky left-0 bg-zinc-50 dark:bg-[#09090b] z-10">Metric</TableHead>
             {data.map((rec, i) => (
-              <TableHead key={i} className="text-zinc-500 text-xs text-right min-w-[120px]">
+              <TableHead key={i} className="text-zinc-500 text-xs text-right min-w-[100px] sm:min-w-[120px]">
                 {String(rec.date).slice(0, 10)}
               </TableHead>
             ))}
@@ -137,11 +136,11 @@ function FinancialTable({
         <TableBody>
           {rows.map((key) => (
             <TableRow key={key} className="border-zinc-200 dark:border-white/[0.04] hover:bg-zinc-100 dark:hover:bg-white/[0.02]">
-              <TableCell className="text-[13px] text-zinc-400 font-medium sticky left-0 bg-white dark:bg-[#09090b] z-10">
+              <TableCell className="text-[12px] sm:text-[13px] text-zinc-400 font-medium sticky left-0 bg-zinc-50 dark:bg-[#09090b] z-10">
                 {key.replace(/([A-Z])/g, " $1").trim()}
               </TableCell>
               {data.map((rec, i) => (
-                <TableCell key={i} className="text-right text-[13px] text-zinc-700 dark:text-zinc-300 tabular-nums">
+                <TableCell key={i} className="text-right text-[12px] sm:text-[13px] text-zinc-700 dark:text-zinc-300 tabular-nums">
                   {formatNum(rec[key])}
                 </TableCell>
               ))}
@@ -149,7 +148,7 @@ function FinancialTable({
           ))}
         </TableBody>
       </Table>
-    </ScrollArea>
+    </div>
   )
 }
 
@@ -198,14 +197,14 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
   return (
     <div className="space-y-6">
       {/* Company header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{String(ratios.shortName || symbol)}</h2>
-          <p className="text-sm text-zinc-500">{String(ratios.sector || "")} · {String(ratios.industry || "")}</p>
+          <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white">{String(ratios.shortName || symbol)}</h2>
+          <p className="text-xs sm:text-sm text-zinc-500">{String(ratios.sector || "")} · {String(ratios.industry || "")}</p>
         </div>
         {targets && (
           <div className="flex items-center gap-3">
-            <div className="text-right">
+            <div className="text-left sm:text-right">
               <p className="text-[10px] uppercase tracking-wider text-zinc-600">Analyst Target</p>
               <p className="text-lg font-bold text-zinc-900 dark:text-white">₹{targets.mean?.toLocaleString("en-IN") ?? "—"}</p>
             </div>
@@ -215,7 +214,7 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
       </div>
 
       {/* Key Ratios Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
         <RatioCard label="Market Cap" value={ratios.marketCap} />
         <RatioCard label="P/E (TTM)" value={ratios.trailingPE} />
         <RatioCard label="Forward P/E" value={ratios.forwardPE} />
@@ -231,7 +230,7 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
       {/* Analyst Targets Bar */}
       {targets && targets.low && targets.high && targets.current && (
         <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
-          <CardContent className="py-4 px-5">
+          <CardContent className="py-4 px-3 sm:px-5">
             <p className="text-[11px] uppercase tracking-wider text-zinc-500 mb-3">Analyst Price Target Range</p>
             <div className="relative h-3 rounded-full bg-zinc-100 dark:bg-white/[0.04] overflow-hidden">
               <div
@@ -246,10 +245,10 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
                 }}
               />
             </div>
-            <div className="flex justify-between mt-2 text-[11px] text-zinc-500">
+            <div className="flex flex-col sm:flex-row justify-between mt-2 text-[11px] text-zinc-500 gap-0.5">
               <span>Low: ₹{targets.low.toLocaleString("en-IN")}</span>
               <span className="text-indigo-400 font-medium">Current: ₹{targets.current.toLocaleString("en-IN")}</span>
-              <span>High: ₹{targets.high.toLocaleString("en-IN")}</span>
+              <span className="sm:text-right">High: ₹{targets.high.toLocaleString("en-IN")}</span>
             </div>
           </CardContent>
         </Card>
@@ -273,21 +272,21 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
 
       {/* Financial Statements Tabs */}
       <Tabs defaultValue="income" className="w-full">
-        <TabsList className="bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06]">
+        <TabsList className="bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06] flex-wrap h-auto gap-0.5 p-1">
           <TabsTrigger value="income" className="text-xs data-[state=active]:bg-white dark:data-[state=active]:bg-white/[0.08] data-[state=active]:text-zinc-900 dark:data-[state=active]:text-white">
-            <DollarSign className="h-3.5 w-3.5 mr-1.5" /> Income
+            <DollarSign className="h-3.5 w-3.5 mr-1" /> Income
           </TabsTrigger>
           <TabsTrigger value="balance" className="text-xs data-[state=active]:bg-white dark:data-[state=active]:bg-white/[0.08] data-[state=active]:text-zinc-900 dark:data-[state=active]:text-white">
-            <BarChart3 className="h-3.5 w-3.5 mr-1.5" /> Balance Sheet
+            <BarChart3 className="h-3.5 w-3.5 mr-1" /> Balance Sheet
           </TabsTrigger>
           <TabsTrigger value="cashflow" className="text-xs data-[state=active]:bg-white dark:data-[state=active]:bg-white/[0.08] data-[state=active]:text-zinc-900 dark:data-[state=active]:text-white">
-            <FileText className="h-3.5 w-3.5 mr-1.5" /> Cash Flow
+            <FileText className="h-3.5 w-3.5 mr-1" /> Cash Flow
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="income" className="mt-4">
-          <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
-            <CardContent className="p-0">
+          <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
+            <CardContent className="p-0 overflow-hidden">
               <FinancialTable
                 data={period === "annual" ? data.income_stmt : data.quarterly_income}
                 importantRows={IMPORTANT_INCOME_ROWS}
@@ -297,8 +296,8 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
         </TabsContent>
 
         <TabsContent value="balance" className="mt-4">
-          <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
-            <CardContent className="p-0">
+          <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
+            <CardContent className="p-0 overflow-hidden">
               <FinancialTable
                 data={period === "annual" ? data.balance_sheet : data.quarterly_balance}
                 importantRows={IMPORTANT_BALANCE_ROWS}
@@ -308,8 +307,8 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
         </TabsContent>
 
         <TabsContent value="cashflow" className="mt-4">
-          <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
-            <CardContent className="p-0">
+          <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
+            <CardContent className="p-0 overflow-hidden">
               <FinancialTable
                 data={period === "annual" ? data.cash_flow : data.quarterly_cashflow}
                 importantRows={IMPORTANT_CASHFLOW_ROWS}
@@ -335,9 +334,9 @@ export function FundamentalsPanel({ symbol }: { symbol: string }) {
                 const sell = Number(rec["Sell"] || rec["sell"] || 0) + Number(rec["strongSell"] || 0)
                 const period = String(rec["date"] || "").slice(0, 7)
                 return (
-                  <div key={i} className="flex-1 min-w-[100px] rounded-lg border border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] p-3 text-center">
-                    <p className="text-[10px] text-zinc-600 mb-1.5">{period}</p>
-                    <div className="flex justify-center gap-3 text-xs">
+                  <div key={i} className="flex-1 min-w-[80px] sm:min-w-[100px] rounded-lg border border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] p-2 sm:p-3 text-center">
+                    <p className="text-[10px] text-zinc-600 mb-1 sm:mb-1.5">{period}</p>
+                    <div className="flex flex-col sm:flex-row justify-center gap-1 sm:gap-3 text-[10px] sm:text-xs">
                       <span className="text-emerald-400">{buy} Buy</span>
                       <span className="text-amber-400">{hold} Hold</span>
                       <span className="text-red-400">{sell} Sell</span>

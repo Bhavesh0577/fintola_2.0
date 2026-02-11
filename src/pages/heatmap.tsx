@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { SectorHeatmap } from "@/components/sector-heatmap"
 import { CommandSearch } from "@/components/command-search"
+import { MobileNav } from "@/components/mobile-nav"
 import { Toaster } from "sonner"
 import {
   BarChart3,
@@ -177,20 +178,30 @@ export default function HeatmapPage() {
       {/* ─── MAIN ─── */}
       <main className="flex-1 overflow-y-auto">
         {/* Top Bar */}
-        <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-zinc-200 dark:border-white/[0.04] bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-2xl px-6">
-          <div className="flex items-center gap-4">
-            {/* Mobile logo */}
-            <div className="flex lg:hidden h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600">
-              <TrendingUp className="h-4 w-4 text-white" />
-            </div>
+        <header className="sticky top-0 z-50 flex h-14 sm:h-16 items-center justify-between border-b border-zinc-200 dark:border-white/[0.04] bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-2xl px-3 sm:px-6">
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Mobile nav drawer */}
+            <MobileNav
+              activeNav="heatmap"
+              onNavigate={(target) => {
+                if (target === "dashboard") router.push("/dash")
+                else if (target === "trade") router.push("/trade")
+                else if (target === "intraday") window.location.href = "https://www.tradingview.com/chart/8daX0FdT/"
+                else if (target === "portfolio") router.push("/portfolio")
+                else if (target === "research") router.push("/research")
+                else if (target === "heatmap") { /* already here */ }
+                else if (target === "settings") router.push("/profile")
+                else router.push("/dash")
+              }}
+            />
             {/* Search Trigger */}
             <button
               title="Search (Ctrl+K)"
               onClick={() => setCmdOpen(true)}
-              className="flex items-center gap-3 h-9 w-[240px] md:w-[320px] px-3 text-sm bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06] text-zinc-500 rounded-xl hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:border-zinc-300 dark:hover:border-white/[0.1] transition-all"
+              className="flex items-center gap-2 sm:gap-3 h-9 w-[160px] sm:w-[240px] md:w-[320px] px-3 text-sm bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06] text-zinc-500 rounded-xl hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:border-zinc-300 dark:hover:border-white/[0.1] transition-all"
             >
               <Search className="h-4 w-4 text-zinc-400 dark:text-zinc-600" />
-              <span className="flex-1 text-left text-zinc-400 dark:text-zinc-600 text-sm">Search stocks, crypto…</span>
+              <span className="flex-1 text-left text-zinc-400 dark:text-zinc-600 text-xs sm:text-sm truncate">Search stocks…</span>
               <kbd className="hidden sm:inline-flex h-5 items-center gap-0.5 rounded border border-zinc-200 dark:border-white/[0.08] bg-zinc-50 dark:bg-white/[0.04] px-1.5 font-mono text-[10px] font-medium text-zinc-400 dark:text-zinc-500">
                 ⌘K
               </kbd>
@@ -221,22 +232,23 @@ export default function HeatmapPage() {
         </header>
 
         {/* Content */}
-        <div className="p-6 space-y-6 max-w-[1800px] mx-auto">
+        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 max-w-[1800px] mx-auto">
           {/* Page Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 sm:gap-3">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-rose-600 shadow-lg shadow-orange-500/20">
-                  <Grid3X3 className="h-4 w-4 text-white" />
+              <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-2 sm:gap-3">
+                <div className="flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-orange-500 to-rose-600 shadow-lg shadow-orange-500/20">
+                  <Grid3X3 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
                 </div>
                 Sector Heatmap
               </h1>
-              <p className="text-sm text-zinc-500 mt-2 ml-12">
-                Live market sectors color-coded by daily % change · Sized by market cap · R-Factor highlights intraday outperformers
+              <p className="text-xs sm:text-sm text-zinc-500 mt-1 sm:mt-2 ml-9 sm:ml-12">
+                <span className="hidden sm:inline">Live market sectors color-coded by daily % change · Sized by market cap · R-Factor highlights intraday outperformers</span>
+                <span className="sm:hidden">Live sectors · Color = % change · Size = market cap</span>
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="border-orange-500/30 bg-orange-500/10 text-orange-500 dark:text-orange-400 text-xs px-2.5 py-1">
+            <div className="flex items-center gap-2 ml-9 sm:ml-0">
+              <Badge variant="outline" className="border-orange-500/30 bg-orange-500/10 text-orange-500 dark:text-orange-400 text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1">
                 <Grid3X3 className="h-3 w-3 mr-1" />
                 NSE India
               </Badge>

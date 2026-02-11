@@ -32,6 +32,8 @@ import "../app/globals.css"
 import { useState, useEffect, useCallback } from "react"
 import { useUser, UserButton, SignOutButton } from "@clerk/nextjs"
 import { useRouter } from "next/router"
+import { MobileNav } from "@/components/mobile-nav"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 /* ─── Sidebar Nav Item ────────────────────────────────────────── */
 function NavItem({
@@ -188,20 +190,30 @@ export default function PortfolioPage() {
       {/* ─── MAIN ─── */}
       <main className="flex-1 overflow-y-auto">
         {/* Top Bar */}
-        <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-zinc-200 dark:border-white/[0.04] bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-2xl px-6">
-          <div className="flex items-center gap-4">
-            {/* Mobile logo */}
-            <div className="flex lg:hidden h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600">
-              <TrendingUp className="h-4 w-4 text-white" />
-            </div>
+        <header className="sticky top-0 z-50 flex h-14 sm:h-16 items-center justify-between border-b border-zinc-200 dark:border-white/[0.04] bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-2xl px-3 sm:px-6">
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Mobile nav drawer */}
+            <MobileNav
+              activeNav="portfolio"
+              onNavigate={(target) => {
+                if (target === "dashboard") router.push("/dash")
+                else if (target === "trade") router.push("/trade")
+                else if (target === "intraday") window.location.href = "https://www.tradingview.com/chart/8daX0FdT/"
+                else if (target === "portfolio") { /* already here */ }
+                else if (target === "research") router.push("/research")
+                else if (target === "heatmap") router.push("/heatmap")
+                else if (target === "settings") router.push("/profile")
+                else router.push("/dash")
+              }}
+            />
             {/* Search Trigger — opens ⌘K */}
             <button
               title="Search (Ctrl+K)"
               onClick={() => setCmdOpen(true)}
-              className="flex items-center gap-3 h-9 w-[240px] md:w-[320px] px-3 text-sm bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06] text-zinc-500 rounded-xl hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:border-zinc-300 dark:hover:border-white/[0.1] transition-all"
+              className="flex items-center gap-2 sm:gap-3 h-9 w-[160px] sm:w-[240px] md:w-[320px] px-3 text-sm bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06] text-zinc-500 rounded-xl hover:bg-zinc-50 dark:hover:bg-white/[0.05] hover:border-zinc-300 dark:hover:border-white/[0.1] transition-all"
             >
               <Search className="h-4 w-4 text-zinc-400 dark:text-zinc-600" />
-              <span className="flex-1 text-left text-zinc-400 dark:text-zinc-600 text-sm">Search stocks, crypto…</span>
+              <span className="flex-1 text-left text-zinc-400 dark:text-zinc-600 text-xs sm:text-sm truncate">Search stocks, crypto…</span>
               <kbd className="hidden sm:inline-flex h-5 items-center gap-0.5 rounded border border-zinc-200 dark:border-white/[0.08] bg-zinc-50 dark:bg-white/[0.04] px-1.5 font-mono text-[10px] font-medium text-zinc-400 dark:text-zinc-500">
                 ⌘K
               </kbd>
@@ -217,6 +229,7 @@ export default function PortfolioPage() {
               <span className="text-xs font-mono text-zinc-500">{currentTime} IST</span>
               <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             </div>
+            <ThemeToggle />
             <button title="Notifications" className="relative flex h-9 w-9 items-center justify-center rounded-xl hover:bg-zinc-100 dark:hover:bg-white/[0.04] transition-colors">
               <Bell className="h-[18px] w-[18px] text-zinc-500" />
               <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-[#09090b]" />
@@ -232,11 +245,11 @@ export default function PortfolioPage() {
         </header>
 
         {/* Content */}
-        <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
+        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 max-w-[1600px] mx-auto">
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                 {activeTab === "portfolio" ? "Portfolio Tracker" : "Paper Trading"}
               </h1>
               <p className="text-sm text-zinc-500 mt-1">

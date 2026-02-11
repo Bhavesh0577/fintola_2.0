@@ -16,6 +16,7 @@ import {
   Globe,
   Briefcase,
   ScanSearch,
+  Grid3X3,
   Sparkles,
   Wallet,
   Settings,
@@ -92,6 +93,7 @@ export function MobileNav({ activeNav, onNavigate }: MobileNavProps) {
           <MobileNavItem icon={Globe} label="Markets" badge="Live" onClick={() => onNavigate("markets")} />
           <MobileNavItem icon={Briefcase} label="Portfolio" onClick={() => onNavigate("portfolio")} />
           <MobileNavItem icon={ScanSearch} label="Research" badge="New" onClick={() => onNavigate("research")} />
+          <MobileNavItem icon={Grid3X3} label="Heatmap" active={activeNav === "heatmap"} badge="New" onClick={() => onNavigate("heatmap")} />
           <MobileNavItem icon={Sparkles} label="AI Insights" onClick={() => onNavigate("ai")} />
 
           <Separator className="!my-3 bg-zinc-200 dark:bg-white/[0.06]" />

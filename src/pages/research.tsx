@@ -33,6 +33,7 @@ import "../app/globals.css"
 import { useState, useEffect, useCallback } from "react"
 import { useUser, UserButton, SignOutButton } from "@clerk/nextjs"
 import { useRouter } from "next/router"
+import { MobileNav } from "@/components/mobile-nav"
 
 /* ─── Sidebar Nav Item ────────────────────────────────────────── */
 function NavItem({
@@ -72,12 +73,14 @@ function NavItem({
 function TabButton({
   icon: Icon,
   label,
+  shortLabel,
   active,
   onClick,
   color,
 }: {
   icon: LucideIcon
   label: string
+  shortLabel?: string
   active: boolean
   onClick: () => void
   color: string
@@ -85,14 +88,15 @@ function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+      className={`flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
         active
           ? "bg-zinc-100 dark:bg-white/[0.08] text-zinc-900 dark:text-white ring-1 ring-zinc-200 dark:ring-white/[0.08] shadow-sm shadow-black/5 dark:shadow-black/10"
           : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.03]"
       }`}
     >
-      <Icon className={`h-4 w-4 ${active ? color : "text-zinc-400 dark:text-zinc-600"} transition-colors`} />
-      {label}
+      <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${active ? color : "text-zinc-400 dark:text-zinc-600"} transition-colors`} />
+      <span className="hidden sm:inline">{label}</span>
+      <span className="sm:hidden">{shortLabel || label}</span>
     </button>
   )
 }
@@ -214,19 +218,33 @@ export default function ResearchPage() {
       {/* ─── MAIN CONTENT ─── */}
       <main className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-zinc-200 dark:border-white/[0.04] px-6">
-          <div className="flex items-center gap-3">
-            <ScanSearch className="h-5 w-5 text-indigo-500 dark:text-indigo-400" />
-            <h1 className="text-lg font-bold tracking-tight text-zinc-900 dark:text-white">Research</h1>
+        <header className="flex h-14 sm:h-16 shrink-0 items-center justify-between border-b border-zinc-200 dark:border-white/[0.04] px-3 sm:px-6">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Mobile nav drawer */}
+            <MobileNav
+              activeNav="research"
+              onNavigate={(target) => {
+                if (target === "dashboard") router.push("/dash")
+                else if (target === "trade") router.push("/trade")
+                else if (target === "intraday") window.location.href = "https://www.tradingview.com/chart/8daX0FdT/"
+                else if (target === "portfolio") router.push("/portfolio")
+                else if (target === "research") { /* already here */ }
+                else if (target === "heatmap") router.push("/heatmap")
+                else if (target === "settings") router.push("/profile")
+                else router.push("/dash")
+              }}
+            />
+            <ScanSearch className="h-5 w-5 text-indigo-500 dark:text-indigo-400 hidden sm:block" />
+            <h1 className="text-base sm:text-lg font-bold tracking-tight text-zinc-900 dark:text-white">Research</h1>
             <Badge variant="outline" className="border-indigo-500/20 bg-indigo-500/5 text-[10px] text-indigo-400">
               {selectedSymbol.replace(".NS", "").replace(".BO", "")}
             </Badge>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* Search trigger */}
             <button
               onClick={() => setCmdOpen(true)}
-              className="flex items-center gap-2 rounded-xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] px-3 py-2 text-sm text-zinc-500 hover:bg-zinc-100 dark:hover:bg-white/[0.04] transition-colors"
+              className="flex items-center gap-2 rounded-xl border border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] px-2 sm:px-3 py-2 text-sm text-zinc-500 hover:bg-zinc-100 dark:hover:bg-white/[0.04] transition-colors"
             >
               <Search className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Search symbol…</span>
@@ -234,7 +252,7 @@ export default function ResearchPage() {
                 ⌘K
               </kbd>
             </button>
-            <span className="text-[11px] text-zinc-600 tabular-nums">{currentTime} IST</span>
+            <span className="hidden sm:inline text-[11px] text-zinc-600 tabular-nums">{currentTime} IST</span>
             <button title="Notifications" className="relative rounded-xl p-2 text-zinc-500 dark:text-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.04] transition-colors">
               <Bell className="h-4 w-4" />
             </button>
@@ -242,16 +260,16 @@ export default function ResearchPage() {
         </header>
 
         {/* Tab navigation */}
-        <div className="flex items-center gap-2 px-6 py-3 border-b border-zinc-200 dark:border-white/[0.04] overflow-x-auto">
-          <TabButton icon={FileText} label="Fundamentals" active={activeTab === "fundamentals"} onClick={() => setActiveTab("fundamentals")} color="text-indigo-400" />
-          <TabButton icon={Users} label="Holders" active={activeTab === "holders"} onClick={() => setActiveTab("holders")} color="text-violet-400" />
-          <TabButton icon={Calendar} label="Calendar" active={activeTab === "calendar"} onClick={() => setActiveTab("calendar")} color="text-amber-400" />
-          <TabButton icon={ScanSearch} label="Screener" active={activeTab === "screener"} onClick={() => setActiveTab("screener")} color="text-emerald-400" />
+        <div className="flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 border-b border-zinc-200 dark:border-white/[0.04] overflow-x-auto scrollbar-hide">
+          <TabButton icon={FileText} label="Fundamentals" shortLabel="Funds" active={activeTab === "fundamentals"} onClick={() => setActiveTab("fundamentals")} color="text-indigo-400" />
+          <TabButton icon={Users} label="Holders" shortLabel="Holders" active={activeTab === "holders"} onClick={() => setActiveTab("holders")} color="text-violet-400" />
+          <TabButton icon={Calendar} label="Calendar" shortLabel="Cal" active={activeTab === "calendar"} onClick={() => setActiveTab("calendar")} color="text-amber-400" />
+          <TabButton icon={ScanSearch} label="Screener" shortLabel="Screener" active={activeTab === "screener"} onClick={() => setActiveTab("screener")} color="text-emerald-400" />
         </div>
 
         {/* Content */}
-        <ScrollArea className="flex-1">
-          <div className="max-w-6xl mx-auto px-6 py-6">
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
             {activeTab === "fundamentals" && <FundamentalsPanel symbol={selectedSymbol} />}
             {activeTab === "holders" && <HoldersPanel symbol={selectedSymbol} />}
             {activeTab === "calendar" && <CalendarPanel symbol={selectedSymbol} />}
@@ -264,7 +282,7 @@ export default function ResearchPage() {
               />
             )}
           </div>
-        </ScrollArea>
+        </div>
       </main>
 
       {/* Command Search */}

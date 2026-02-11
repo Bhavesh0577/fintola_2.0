@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Table,
   TableBody,
@@ -87,13 +86,13 @@ function OwnershipBar({ data }: { data: HoldersData["major_holders"] }) {
           })}
         </div>
         {/* Legend */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-3">
           {data.map((item, i) => (
-            <div key={i} className="flex items-center gap-2.5">
-              <div className={`w-2.5 h-2.5 rounded-full ${colors[i % colors.length]}`} />
-              <div className="min-w-0">
-                <p className="text-[12px] text-zinc-400 truncate">{item.label}</p>
-                <p className="text-sm font-semibold text-zinc-900 dark:text-white">{String(item.value)}</p>
+            <div key={i} className="flex items-center gap-2 min-w-0">
+              <div className={`w-2.5 h-2.5 shrink-0 rounded-full ${colors[i % colors.length]}`} />
+              <div className="min-w-0 flex-1">
+                <p className="text-[11px] sm:text-[12px] text-zinc-400 truncate">{item.label}</p>
+                <p className="text-sm font-semibold text-zinc-900 dark:text-white truncate">{String(item.value)}</p>
               </div>
             </div>
           ))}
@@ -146,7 +145,7 @@ export function HoldersPanel({ symbol }: { symbol: string }) {
       <OwnershipBar data={data.major_holders} />
 
       <Tabs defaultValue={hasInst ? "institutional" : hasMf ? "mutual" : "insider"} className="w-full">
-        <TabsList className="bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06]">
+        <TabsList className="bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.06] flex-wrap h-auto gap-0.5 p-1">
           {hasInst && (
             <TabsTrigger value="institutional" className="text-xs data-[state=active]:bg-white dark:data-[state=active]:bg-white/[0.08] data-[state=active]:text-zinc-900 dark:data-[state=active]:text-white">
               <Building2 className="h-3.5 w-3.5 mr-1.5" /> Institutional
@@ -167,10 +166,10 @@ export function HoldersPanel({ symbol }: { symbol: string }) {
         {/* Institutional Holders */}
         {hasInst && (
           <TabsContent value="institutional" className="mt-4">
-            <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
+            <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
               <CardContent className="p-0">
-                <ScrollArea className="w-full">
-                  <Table>
+                <div className="w-full overflow-x-auto">
+                  <Table className="min-w-[500px]">
                     <TableHeader>
                       <TableRow className="border-zinc-200 dark:border-white/[0.06] hover:bg-transparent">
                         <TableHead className="text-zinc-500 text-xs">Holder</TableHead>
@@ -194,7 +193,7 @@ export function HoldersPanel({ symbol }: { symbol: string }) {
                       ))}
                     </TableBody>
                   </Table>
-                </ScrollArea>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -203,10 +202,10 @@ export function HoldersPanel({ symbol }: { symbol: string }) {
         {/* Mutual Fund Holders */}
         {hasMf && (
           <TabsContent value="mutual" className="mt-4">
-            <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
+            <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
               <CardContent className="p-0">
-                <ScrollArea className="w-full">
-                  <Table>
+                <div className="w-full overflow-x-auto">
+                  <Table className="min-w-[500px]">
                     <TableHeader>
                       <TableRow className="border-zinc-200 dark:border-white/[0.06] hover:bg-transparent">
                         <TableHead className="text-zinc-500 text-xs">Fund</TableHead>
@@ -230,7 +229,7 @@ export function HoldersPanel({ symbol }: { symbol: string }) {
                       ))}
                     </TableBody>
                   </Table>
-                </ScrollArea>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -239,10 +238,10 @@ export function HoldersPanel({ symbol }: { symbol: string }) {
         {/* Insider Transactions */}
         {hasInsider && (
           <TabsContent value="insider" className="mt-4">
-            <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02] overflow-hidden">
+            <Card className="border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
               <CardContent className="p-0">
-                <ScrollArea className="w-full">
-                  <Table>
+                <div className="w-full overflow-x-auto">
+                  <Table className="min-w-[600px]">
                     <TableHeader>
                       <TableRow className="border-zinc-200 dark:border-white/[0.06] hover:bg-transparent">
                         <TableHead className="text-zinc-500 text-xs">Insider</TableHead>
@@ -280,7 +279,7 @@ export function HoldersPanel({ symbol }: { symbol: string }) {
                       })}
                     </TableBody>
                   </Table>
-                </ScrollArea>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

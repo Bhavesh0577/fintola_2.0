@@ -80,7 +80,7 @@ function DashboardMockup() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1.1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="relative mx-auto max-w-5xl mt-20 px-4"
+      className="relative mx-auto max-w-5xl mt-10 sm:mt-20 px-2 sm:px-4"
     >
       {/* Outer glow */}
       <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-white/[0.08] to-transparent" />
@@ -95,14 +95,14 @@ function DashboardMockup() {
             <div className="w-2.5 h-2.5 rounded-full bg-white/[0.08]" />
           </div>
           <div className="flex-1 flex justify-center">
-            <div className="px-16 py-1 rounded-md bg-white/[0.03] text-[11px] text-white/20 font-mono tracking-wide">
+            <div className="px-4 sm:px-16 py-1 rounded-md bg-white/[0.03] text-[10px] sm:text-[11px] text-white/20 font-mono tracking-wide truncate">
               fintola.vercel.app/dash
             </div>
           </div>
         </div>
         {/* Content */}
-        <div className="p-5 space-y-4">
-          <div className="grid grid-cols-4 gap-3">
+        <div className="p-3 sm:p-5 space-y-3 sm:space-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
             {cards.map((c, i) => (
               <motion.div
                 key={i}
@@ -557,7 +557,7 @@ export default function LandingPage() {
       {/* ── Footer ── */}
       <footer className="relative border-t border-white/[0.04] py-12 px-5">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-10 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 mb-12">
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <div className="flex items-center justify-center w-7 h-7 rounded-md bg-white/[0.07]">
