@@ -96,7 +96,7 @@ function DashboardMockup() {
           </div>
           <div className="flex-1 flex justify-center">
             <div className="px-4 sm:px-16 py-1 rounded-md bg-white/[0.03] text-[10px] sm:text-[11px] text-white/20 font-mono tracking-wide truncate">
-              fintola.vercel.app/dash
+              fintola.thebhavesh.me/dash
             </div>
           </div>
         </div>
