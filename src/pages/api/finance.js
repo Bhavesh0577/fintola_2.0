@@ -42,6 +42,8 @@ export default async function handler(req, res) {
       throw new Error(data.error);
     }
 
+    // Cache chart data: 5 min CDN cache, serve stale for 10 min while revalidating
+    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
     res.status(200).json(data);
   } catch (error) {
     console.error('Error fetching data:', error);

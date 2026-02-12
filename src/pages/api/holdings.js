@@ -27,6 +27,8 @@ export default async function handler(req, res) {
         .order('created_at', { ascending: false })
 
       if (error) throw error
+      // Private cache: browser only, revalidate every 30s
+      res.setHeader('Cache-Control', 'private, max-age=30, stale-while-revalidate=60')
       return res.status(200).json(data)
     }
 

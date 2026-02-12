@@ -4,9 +4,19 @@ import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ChartUI } from "@/components/chart-ui"
-import { VaultTable } from "@/components/vault-table"
-import { CommandSearch } from "@/components/command-search"
+import dynamic from "next/dynamic"
+
+// Lazy-load heavy components to reduce initial bundle
+const ChartUI = dynamic(() => import("@/components/chart-ui").then(m => ({ default: m.ChartUI })), {
+  ssr: false,
+  loading: () => <div className="h-[400px] rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+})
+const VaultTable = dynamic(() => import("@/components/vault-table").then(m => ({ default: m.VaultTable })), {
+  loading: () => <div className="h-[300px] rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+})
+const CommandSearch = dynamic(() => import("@/components/command-search").then(m => ({ default: m.CommandSearch })), {
+  ssr: false,
+})
 import {
   Activity,
   ArrowDownRight,

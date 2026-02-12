@@ -3,11 +3,21 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { PortfolioTracker } from "@/components/portfolio-tracker"
-import { PaperTrading } from "@/components/paper-trading"
-import { CommandSearch } from "@/components/command-search"
-import { ChartUI } from "@/components/chart-ui"
+import dynamic from "next/dynamic"
 import { Toaster } from "sonner"
+
+// Lazy-load heavy components
+const PortfolioTracker = dynamic(() => import("@/components/portfolio-tracker").then(m => ({ default: m.PortfolioTracker })), {
+  loading: () => <div className="h-[400px] rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+})
+const PaperTrading = dynamic(() => import("@/components/paper-trading").then(m => ({ default: m.PaperTrading })), {
+  loading: () => <div className="h-[400px] rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+})
+const CommandSearch = dynamic(() => import("@/components/command-search").then(m => ({ default: m.CommandSearch })), { ssr: false })
+const ChartUI = dynamic(() => import("@/components/chart-ui").then(m => ({ default: m.ChartUI })), {
+  ssr: false,
+  loading: () => <div className="h-[300px] rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+})
 import {
   BarChart3,
   Bell,

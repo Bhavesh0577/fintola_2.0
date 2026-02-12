@@ -41,6 +41,8 @@ export default async function handler(req, res) {
         // Call Gemini API for prediction
         const predictions = await callGeminiAPI(processedData, symbol);
 
+        // Cache AI predictions: 30 min CDN cache, serve stale for 1 hour
+        res.setHeader('Cache-Control', 's-maxage=1800, stale-while-revalidate=3600');
         res.status(200).json(predictions);
     } catch (error) {
         console.error('Error generating AI predictions:', error);

@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { StatsChart } from "./stats-chart";
+import dynamic from "next/dynamic";
 import { Sparkles } from "lucide-react";
+
+// Lazy-load the chart component (lightweight-charts ~45KB gzipped)
+const StatsChart = dynamic(() => import("./stats-chart").then(m => ({ default: m.StatsChart })), {
+  ssr: false,
+  loading: () => <div className="h-[350px] rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+});
 
 interface ChartUIProps {
     symbol: string;

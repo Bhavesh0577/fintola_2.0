@@ -3,11 +3,22 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { CommandSearch } from "@/components/command-search"
-import { FundamentalsPanel } from "@/components/research/fundamentals-panel"
-import { HoldersPanel } from "@/components/research/holders-panel"
-import { CalendarPanel } from "@/components/research/calendar-panel"
-import { ScreenerPanel } from "@/components/research/screener-panel"
+import dynamic from "next/dynamic"
+
+// Lazy-load heavy research panels and command search
+const CommandSearch = dynamic(() => import("@/components/command-search").then(m => ({ default: m.CommandSearch })), { ssr: false })
+const FundamentalsPanel = dynamic(() => import("@/components/research/fundamentals-panel").then(m => ({ default: m.FundamentalsPanel })), {
+  loading: () => <div className="space-y-4"><div className="h-20 rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" /><div className="h-64 rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" /></div>,
+})
+const HoldersPanel = dynamic(() => import("@/components/research/holders-panel").then(m => ({ default: m.HoldersPanel })), {
+  loading: () => <div className="h-64 rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+})
+const CalendarPanel = dynamic(() => import("@/components/research/calendar-panel").then(m => ({ default: m.CalendarPanel })), {
+  loading: () => <div className="h-64 rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+})
+const ScreenerPanel = dynamic(() => import("@/components/research/screener-panel").then(m => ({ default: m.ScreenerPanel })), {
+  loading: () => <div className="h-64 rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+})
 import {
   BarChart3,
   Bell,

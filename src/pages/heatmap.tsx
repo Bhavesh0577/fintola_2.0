@@ -2,10 +2,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { SectorHeatmap } from "@/components/sector-heatmap"
-import { CommandSearch } from "@/components/command-search"
+import dynamic from "next/dynamic"
 import { MobileNav } from "@/components/mobile-nav"
 import { Toaster } from "sonner"
+
+// Lazy-load heavy components (recharts treemap + command search)
+const SectorHeatmap = dynamic(() => import("@/components/sector-heatmap").then(m => ({ default: m.SectorHeatmap })), {
+  ssr: false,
+  loading: () => <div className="h-[500px] rounded-xl bg-zinc-100 dark:bg-white/[0.04] animate-pulse" />,
+})
+const CommandSearch = dynamic(() => import("@/components/command-search").then(m => ({ default: m.CommandSearch })), { ssr: false })
 import {
   BarChart3,
   Bell,

@@ -31,6 +31,8 @@ export default async function handler(req, res) {
         .order('recorded_at', { ascending: true })
 
       if (error) throw error
+      // Private cache: browser only, revalidate every 60s
+      res.setHeader('Cache-Control', 'private, max-age=60, stale-while-revalidate=120')
       return res.status(200).json(data)
     }
 
